@@ -142,3 +142,26 @@ only presents data computed by `tasks/`; it never invents numbers.
 `test_conviction`, `test_exposure`, `test_committee`, `test_decision_history`,
 `test_decision_consistency`, `test_cache`, `test_smoke`, ...). Run with
 `python -m pytest -q` — all offline, no key or network needed.
+
+---
+
+## Web / API layer (target — being implemented on branch overnight/truthful-core-loop)
+
+The engine principles above ("never fabricate") must hold end-to-end. The current
+FastAPI bridge (`api_server.py`) violates them (fabricated timestamps, silent mock
+fallback). The target design:
+
+- **Typed envelope.** Every `/api/*` response is a Pydantic `ApiEnvelope[T]`:
+  `{ data, state: ok|stale|partial|unavailable, mode: demo|live, observed_at,
+  fetched_at, sources[], warnings[] }`, enforced as FastAPI `response_model`.
+- **Derived, honest state.** `state`/timestamps come from real source records, never
+  `datetime.now()` as a stand-in. Unknown → null + a warning, not a fake value.
+- **One schema.** TypeScript types are generated from the OpenAPI schema; CI fails on
+  drift. No hand-maintained dual contract.
+- **No silent fallback.** The frontend renders `unavailable` on failure. Mock data is
+  served only in explicit, labeled Demo mode.
+- **Domain objects.** Portfolio, Holding, Thesis, Claim, Evidence, EvidenceSource,
+  ThesisSnapshot, ThesisDelta, DecisionRecord.
+
+See `docs/DECISIONS.md` (ADR-001..011) for rationale and `docs/CURRENT_STATE.md` for
+the gap between this target and today's code.
