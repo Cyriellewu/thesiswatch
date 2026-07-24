@@ -25,7 +25,16 @@ Keep ThesisWatch a **personal investment thesis monitor**, or gradually generali
 Confirm ADR-005/006: merged Thesis Detail + responsive split-view (desktop) / single-flow (mobile), dropping the 430px phone shell. Provisional: yes.
 
 ## Q6 — Unfinished features
-Confirm hiding Ask and What-if until real (vs labeling them "Preview"). Provisional: hide.
+Confirm hiding Ask and What-if until real (vs labeling them "Preview"). Provisional: hide. (DONE on branch — hidden.)
+
+## Q7 — Merged ThesisDetail: "What changed" vs "Drivers" overlap
+In the merged detail view, "What Changed" chips (from `whatChanged.d1/w1/m1`) and the "Drivers" ledger (from `why.drivers`) overlap conceptually. Provisional: keep both (chips = time-windowed summary; drivers = full expandable ledger with evidence). **Decide:** merge into one section, or keep separate?
+
+## Q8 — Conviction delta on direct navigation
+The sticky header shows `prevConviction → conviction` only when opened from a Today card. On direct navigation to a ticker, `prevConviction` is unknown. Provisional: omit the delta when unknown (don't fabricate). **Decide:** store prev in URL/state to always show it, or omit when unavailable?
+
+## Known polish item (not a decision, tracked for follow-up)
+Desktop attention-list rail (~380px) clips card badges/labels (e.g. "GOOGL69", conviction pill). The split-view structure is correct; the list card needs a compact variant for the narrow rail. Deferred to a focused CSS follow-up.
 
 ## Q7 — BLOCKER: two parallel envelope implementations collided on this branch (needs your call)
 While the overnight loop was mid-slice, a second commit landed on `overnight/truthful-core-loop`:

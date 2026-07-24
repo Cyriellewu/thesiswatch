@@ -5,7 +5,36 @@ All notable changes to ThesisWatch are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased] — Truthful Core Loop (branch `overnight/truthful-core-loop`, NOT released)
+
+Honesty-and-integration realignment. Nothing here is tagged or released.
+
+### Added
+- **Typed API envelope** (`api_models.py`, ADR-001): every `/api/*` response is
+  `{ data, state: ok|stale|partial|unavailable, mode: demo|live, observed_at,
+  fetched_at, sources[], warnings[] }`, enforced as a FastAPI `response_model`.
+- **Explicit Demo/Live mode** (ADR-004) with a persistent in-app indicator.
+- **Merged Thesis Detail** view (ADR-005): Why + Evidence + Thesis unified into one
+  continuous, responsive screen (desktop split-view, mobile single-flow) — replaces
+  the three overlapping sheets/screens.
+- API contract tests (`tests/test_api_contract.py`) and a Playwright smoke test
+  (`app/e2e/`), including a live-failure test that asserts an honest `unavailable`
+  state instead of silent mock.
+- Engineering governance: `HEARTBEAT.md`, `docs/NORTH_STAR.md`,
+  `docs/CURRENT_STATE.md`, `docs/DECISIONS.md`, `docs/DECISIONS_FOR_WILLOW.md`,
+  `docs/audits/*` (five independent audits).
+
+### Changed
+- **No silent mock fallback** (ADR-003): on live failure the UI shows `unavailable`
+  (with retry); sample data appears only in explicitly-labeled Demo mode.
+- Stopped fabricating freshness: timestamps derive from real records or are `null`
+  with a warning (never `datetime.now()` as a stand-in).
+- Replaced `except Exception: pass` sites with typed handling that records warnings
+  and degrades state to `partial`/`unavailable`.
+
+### Removed / hidden (ADR-008)
+- Hidden the unfinished **Ask** panel, the hard-coded **What-if** simulator, and the
+  stub **Watchlist** until they have real backends.
 
 ## [0.3.0] - 2026-07-24
 
@@ -28,9 +57,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the Streamlit quick-start env var in the README
   (`ALPHAWATCH_OFFLINE=1`).
 
-## [0.1.0] - 2026-07-24
+## [0.2.0] - 2026-07-24
 
-First public release of ThesisWatch — a local-first personal investment
+### Added
+- **Daily conviction snapshots** — per-holding conviction is recorded over time so
+  "what changed since last check" and Why-Changed deltas are grounded in history.
+
+### Changed
+- Rebranded the app title to **ThesisWatch** (display name; internal module names
+  unchanged to avoid breakage).
+
+## [0.1.0] - 2026-07-24
 **thesis-change monitor**. It answers "did my thesis change today, why, and do I
 need to do anything?" rather than emitting a buy/sell score. Not financial advice.
 
