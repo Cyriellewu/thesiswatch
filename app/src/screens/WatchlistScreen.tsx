@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { allHoldings as mockHoldings } from "../data/mock";
-import { fetchDailyBrief } from "../data/api";
+import { fetchToday } from "../data/api";
 import { StatusPill } from "../components/primitives";
 import type { Holding } from "../types";
 
@@ -8,8 +8,9 @@ export function WatchlistScreen({ onOpenThesis }: { onOpenThesis: (t: string) =>
   const [allHoldings, setAllHoldings] = useState<Holding[]>(mockHoldings);
   useEffect(() => {
     let live = true;
-    fetchDailyBrief().then((b) => {
-      if (!live) return;
+    fetchToday().then((env) => {
+      if (!live || !env.data) return;
+      const b = env.data;
       const all = [...b.needsAttention, ...b.worthWatching, ...b.noMaterialChange];
       if (all.length) setAllHoldings(all);
     });

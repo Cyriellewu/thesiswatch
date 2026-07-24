@@ -304,9 +304,29 @@ export interface DailyBrief {
   needsAttention: Holding[];
   worthWatching: Holding[];
   noMaterialChange: Holding[];
-  /** Age of the newest successful brief refresh; non-negative integer. */
-  updatedAgoMinutes: number;
+  /** @deprecated backend no longer sends this; use the envelope's fetched_at instead. */
+  updatedAgoMinutes?: number;
   dataState: DataState;
+}
+
+/** Server-declared availability state for the typed API envelope (ADR-001). */
+export type EnvelopeState = 'ok' | 'stale' | 'partial' | 'unavailable';
+
+/** Server-declared data provenance mode (ADR-004). */
+export type EnvelopeMode = 'demo' | 'live';
+
+/**
+ * The single typed envelope every /api/* response is wrapped in. The frontend reads
+ * `state`/`mode`/`warnings` to render honestly and NEVER silently substitutes mock data.
+ */
+export interface ApiEnvelope<T> {
+  data: T | null;
+  state: EnvelopeState;
+  mode: EnvelopeMode;
+  observed_at: string | null;
+  fetched_at: string | null;
+  sources: string[];
+  warnings: string[];
 }
 
 /** Current page and entity context supplied to the contextual question UI. */
