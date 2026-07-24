@@ -143,3 +143,11 @@ Stop and record a blocker when:
 - Known polish issue: desktop attention-rail (~380px) clips card badges. Structure correct; needs compact list-card variant.
 - Next: address review blockers -> push branch -> open DRAFT PR (no merge) -> morning handoff. Heartbeat kept PAUSED during active implementation to prevent concurrent edits; will re-enable after PR.
 - Willow decisions pending: Q1-Q8 in docs/DECISIONS_FOR_WILLOW.md.
+
+### 2026-07-25 02:15 — Phase 4 reviews + fix pass complete
+
+- Reviews: review-ux (opus-4.8) + review-correctness (gpt-5.6-terra) on branch diff.
+- Correctness review caught a BLOCKER: observed_at was still generation-time (now()) at the willow_agent layer, promoted to observed_at/priceObservedAt/asOf. Fixed by fix-pass (gpt-5.3-codex): live unknown observation -> null + warning + state=partial; never now() as a stand-in.
+- Also fixed: nullable timestamp rendering (no 1970), removed fake d1/w1/m1 period tabs -> single "What changed (latest)", desktop rail xl:grid-cols-1 (clipping gone), unified Demo/Live toggle (both reload), Portfolio mobile mode badge, expanded contract tests (why/evidence/thesis/exposures + forced-failure) + Playwright negative assertion (mock absent on live failure). Deleted now-dead EvidenceSheet.tsx/WhyChangedSheet.tsx.
+- Verified by Kiera: pytest 93 passed / 1 known flaky; npm build clean; live /api/today => state=partial, observed_at=null, warning present; 1440px screenshot confirms no clipping.
+- Next: push branch, open DRAFT PR (no merge), write morning handoff, re-enable heartbeat.
