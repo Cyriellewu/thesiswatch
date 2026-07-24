@@ -1,0 +1,48 @@
+buckets:
+  ETF / 大盘底仓:
+    description: "适合作为长期底仓，降低单股风险。"
+    symbols: [VOO, VTI, SPY, IVV, QQQM, QQQ]
+
+  消费防御:
+    description: "经济好坏都有人消费，通常更稳，适合分散科技仓。"
+    symbols: [COST, WMT, PG, KO, PEP, MCD]
+
+  医疗健康:
+    description: "长期刚需，高壁垒，但估值要看。"
+    symbols: [LLY, NVO, JNJ, TMO, ISRG, UNH, ABBV]
+
+  金融 / 支付:
+    description: "支付网络、银行和资产管理属于经济基础设施。"
+    symbols: [JPM, V, MA, AXP, BRK-B, BLK]
+
+  工业 / 基建 / 电力:
+    description: "受益于基建、电气化、航空、国防和 AI 数据中心电力需求。"
+    symbols: [CAT, GE, ETN, RTX, DE, HON, CEG, VST, VRT, BE, SEI, EOSE]
+
+  能源 / 公用事业:
+    description: "现金流和分红属性较强，也受能源和电力周期影响。"
+    symbols: [XOM, CVX, NEE, DUK, SO, CEG, VST, BE, SEI, EOSE]
+
+  通信服务:
+    description: "广告、平台、内容和通信网络，和传统科技有重叠但商业模式不同。"
+    symbols: [GOOGL, META, NFLX, TMUS, DIS]
+
+  科技 / AI / 半导体:
+    description: "成长强但波动大，适合控制比例，不要组合过度集中。"
+    symbols: [MSFT, NVDA, AVGO, AMD, ASML, TSM, MU, PANW, CRWD, INTC, LITE, COHR, TSEM]
+
+  高波动观察:
+    description: "主题强、弹性大，但仓位要小，优先设提醒。"
+    symbols: [CRDO, ALAB, OKLO, IREN, SNDK, CRWV, CORZ, APLD, CIFR]
+
+revaluation_themes:
+  分拆重估:
+    keywords: [spinoff, separation, independent public company, 分拆]
+  周期反转:
+    keywords: [cycle recovery, supply shortage, pricing power, inventory correction, 周期反转]
+  AI 数据中心需求:
+    keywords: [AI demand, data center, power demand, electricity demand, AI, 数据中心, 电力需求]
+  盈利改善:
+    keywords: [earnings beat, margin expansion, guidance raise, 财报超预期, 指引上调]
+  指数纳入:
+    keywords: [S&P 500 inclusion, index inclusion, 指数纳入]

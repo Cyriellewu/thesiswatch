@@ -1,0 +1,6 @@
+# SEC CIKs for 13F tracking (examples — verify before production use)
+investors:
+  - name: "Example Fund A"
+    cik: "0001067983"
+  - name: "Example Fund B"
+    cik: "0001388838"

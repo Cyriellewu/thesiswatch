@@ -1,0 +1,25 @@
+enabled: true
+
+scopes:
+  holdings: true
+  watchlist: true
+  opportunity_pool: true
+  guru_pool: true
+  revaluation_pool: true
+  theme_pool: true
+  etf_pool: true
+
+types:
+  entry_range: true
+  major_move: true
+  theme_breakout: true
+  holding_drawdown: true
+  major_news: true
+  etf_market_drop: true
+
+# urgent_only | urgent_major | all
+push_strength: urgent_major
+
+limits:
+  max_auto_alerts_per_cycle: 12
+  max_theme_pushes_per_day: 2

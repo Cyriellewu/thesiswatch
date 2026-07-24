@@ -1,0 +1,76 @@
+AI_memory_HBM:
+  trigger_keywords:
+    - HBM
+    - memory
+    - DRAM
+    - NAND
+    - AI memory
+    - data center storage
+    - semiconductor memory
+    - semiconductor
+  representative_symbols:
+    - SSNLF
+    - 005930.KS
+    - 005935.KS
+    - 000660.KS
+    - MU
+    - SNDK
+    - WDC
+    - STX
+  tradable_alternatives:
+    - MU
+    - SNDK
+    - WDC
+    - STX
+    - EWY
+  note: "Samsung / SK Hynix 是 AI memory / HBM 主题信号，不一定适合直接交易。"
+
+AI_data_center_power:
+  trigger_keywords:
+    - data center power
+    - electricity demand
+    - AI power
+    - grid
+    - power demand
+    - utilities
+  representative_symbols:
+    - CEG
+    - VST
+    - VRT
+    - ETN
+    - BE
+    - EOSE
+    - NEE
+    - SO
+    - DUK
+  tradable_alternatives:
+    - CEG
+    - VST
+    - VRT
+    - ETN
+    - XLU
+
+AI_compute_cloud:
+  trigger_keywords:
+    - AI cloud
+    - GPU cloud
+    - inference
+    - training cluster
+    - compute
+    - data center
+  representative_symbols:
+    - CRWV
+    - IREN
+    - CORZ
+    - APLD
+    - NVDA
+    - AVGO
+    - AMD
+    - MSFT
+    - AMZN
+  tradable_alternatives:
+    - NVDA
+    - AVGO
+    - AMD
+    - MSFT
+    - AMZN

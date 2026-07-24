@@ -1,0 +1,19 @@
+notes:
+  KO:
+    plain_english_note: "全球饮料品牌，消费防御属性强。"
+    risk_note: "增长偏慢，估值过高时不宜追。"
+  COST:
+    plain_english_note: "会员制零售，用户粘性高。"
+    risk_note: "长期质量高但估值常偏贵。"
+  V:
+    plain_english_note: "全球支付网络，轻资产现金流强。"
+    risk_note: "高估值阶段更适合等回踩。"
+  JNJ:
+    plain_english_note: "医疗龙头，防御属性好。"
+    risk_note: "政策与诉讼事件会带来阶段波动。"
+  CEG:
+    plain_english_note: "电力主题受益于数据中心需求。"
+    risk_note: "主题过热时回撤会较大。"
+  SNDK:
+    plain_english_note: "存储链条重估候选。"
+    risk_note: "波动高，适合提醒而非追高。"

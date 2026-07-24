@@ -1,0 +1,193 @@
+VOO:
+  name: Vanguard S&P 500 ETF
+  bucket: ETF / 大盘底仓
+  type: 长期底仓
+  quality_note: 宽基 ETF，适合作为长期底仓。
+  risk_note: 不追求短期爆发，更适合定投和再平衡。
+
+QQQ:
+  name: Invesco QQQ
+  bucket: ETF / 大盘底仓
+  type: 长期底仓
+  quality_note: 纳指 100 ETF，科技权重高。
+  risk_note: 和你的科技持仓相关性较高，不宜无限加。
+
+NVDA:
+  name: NVIDIA
+  bucket: 科技 / AI / 半导体
+  type: 高质量强趋势
+  quality_note: AI 加速卡龙头，数据中心需求仍是核心驱动。
+  risk_note: 估值和预期都高，财报或指引不及预期时波动会很大。
+
+AVGO:
+  name: Broadcom
+  bucket: 科技 / AI / 半导体
+  type: 高质量慢牛
+  quality_note: AI 网络芯片与基础软件并行，现金流质量较强。
+  risk_note: 涨幅大时不适合追，优先等回踩或分批。
+
+MSFT:
+  name: Microsoft
+  bucket: 科技 / AI / 半导体
+  type: 高质量慢牛
+  quality_note: 云、AI 和企业软件底盘稳，适合长期观察。
+  risk_note: 估值受利率和 AI 投入回报预期影响。
+
+PANW:
+  name: Palo Alto Networks
+  bucket: 科技 / AI / 半导体
+  type: 高质量慢牛
+  quality_note: 网络安全龙头，企业安全预算具备长期刚性。
+  risk_note: 软件估值波动明显，财报指引会影响短期走势。
+
+GOOGL:
+  name: Alphabet
+  bucket: 通信服务
+  type: 高质量慢牛
+  quality_note: 搜索、广告、YouTube 和云业务现金流强。
+  risk_note: AI 搜索竞争和监管会带来估值扰动。
+
+META:
+  name: Meta Platforms
+  bucket: 通信服务
+  type: 高质量强趋势
+  quality_note: 广告现金流强，AI 推荐和成本控制改善利润弹性。
+  risk_note: AI/元宇宙投入和监管风险会放大波动。
+
+TSLA:
+  name: Tesla
+  bucket: 高波动观察
+  type: 波动机会
+  quality_note: 电动车、储能和自动驾驶叙事强，但周期和竞争压力也大。
+  risk_note: 价格战、交付数据和估值情绪都会造成大幅波动。
+
+IREN:
+  name: IREN
+  bucket: 高波动观察
+  type: 重估趋势
+  quality_note: 数据中心与算力/能源主题相关，弹性高。
+  risk_note: 主题属性强，适合小仓或提醒，不适合当稳健底仓。
+
+COST:
+  name: Costco
+  bucket: 消费防御
+  type: 高质量慢牛
+  quality_note: 会员制零售，现金流稳定，消费防御属性强。
+  risk_note: 估值通常不便宜，适合分批和回踩提醒。
+
+V:
+  name: Visa
+  bucket: 金融 / 支付
+  type: 高质量慢牛
+  quality_note: 全球支付网络，轻资产、高利润率。
+  risk_note: 估值和消费周期会影响短期波动。
+
+CEG:
+  name: Constellation Energy
+  bucket: 工业 / 基建 / 电力
+  type: 重估趋势
+  quality_note: 电力资产稀缺，受 AI 数据中心用电需求关注。
+  risk_note: 已被市场重估时不要追高，优先等回踩。
+
+VST:
+  name: Vistra
+  bucket: 工业 / 基建 / 电力
+  type: 重估趋势
+  quality_note: 电力与数据中心供电逻辑较强。
+  risk_note: 主题交易热时波动会明显放大。
+
+SNDK:
+  name: SanDisk
+  bucket: 科技 / AI / 半导体
+  type: 重估趋势
+  quality_note: 存储业务有真实产业需求。
+  revaluation_note: 分拆上市、存储周期和 AI 数据需求带来重估可能。
+  risk_note: 涨幅过大时不要追，适合趋势提醒。
+
+BE:
+  name: Bloom Energy
+  bucket: 工业 / 基建 / 电力
+  type: 重估趋势
+  quality_note: 燃料电池和分布式电力方案，市场会把它放进 AI 数据中心电力链观察。
+  revaluation_note: 数据中心电力缺口、备用电源和清洁电力需求可能带来主题重估。
+  risk_note: 波动和估值弹性都大，不适合当稳健底仓。
+
+CRWV:
+  name: CoreWeave
+  bucket: 高波动观察
+  type: 重估趋势
+  quality_note: AI 云算力与 GPU 数据中心服务商，和 NVDA 生态相关度高。
+  revaluation_note: AI 训练/推理需求、数据中心扩张和客户合同是核心催化。
+  risk_note: 高增长高估值，财报和融资消息会显著放大波动；这里只看正股，不模拟 CALL。
+
+INTC:
+  name: Intel
+  bucket: 科技 / AI / 半导体
+  type: 观察候选
+  quality_note: 老牌半导体与 Foundry 转型标的，重估取决于执行和周期修复。
+  revaluation_note: AI PC、先进制程、代工业务和政策支持可能触发重估。
+  risk_note: 转型周期长，不能只因便宜或期权热度追。
+
+LITE:
+  name: Lumentum
+  bucket: 科技 / AI / 半导体
+  type: 重估趋势
+  quality_note: 光通信/光器件公司，受 AI 数据中心光互联需求关注。
+  revaluation_note: 光模块、数据中心互联和需求复苏是主要催化。
+  risk_note: 行业周期和客户订单波动明显，适合提醒而不是重仓。
+
+CORZ:
+  name: Core Scientific
+  bucket: 高波动观察
+  type: 重估趋势
+  quality_note: 比特币矿业和 HPC/AI 数据中心转型标的，弹性大。
+  revaluation_note: 矿场电力资产转向 AI/HPC 算力托管可能带来重估。
+  risk_note: 加密货币、融资和转型执行风险都高，只适合小仓观察。
+
+APLD:
+  name: Applied Digital
+  bucket: 高波动观察
+  type: 重估趋势
+  quality_note: AI 数据中心和 HPC 基础设施公司，主题弹性强。
+  revaluation_note: 数据中心租约、GPU/HPC 客户和电力资源是关键催化。
+  risk_note: 融资、建设进度和客户集中度会带来大波动。
+
+CIFR:
+  name: Cipher Mining
+  bucket: 高波动观察
+  type: 重估趋势
+  quality_note: 矿业电力资产向 HPC/AI 算力方向重估的观察票。
+  revaluation_note: 比特币矿转 AI 数据中心、低成本电力和托管合同可能触发重估。
+  risk_note: 加密周期和项目兑现风险高，不适合当核心仓。
+
+COHR:
+  name: Coherent
+  bucket: 科技 / AI / 半导体
+  type: 重估趋势
+  quality_note: 光通信和材料器件公司，AI 数据中心光互联需求带来关注。
+  revaluation_note: 光模块/光器件需求、数据中心网络升级和利润率改善是催化。
+  risk_note: 周期股属性强，订单和利润率变化要跟踪。
+
+TSEM:
+  name: Tower Semiconductor
+  bucket: 科技 / AI / 半导体
+  type: 观察候选
+  quality_note: 模拟/特色工艺半导体代工，和先进逻辑龙头不同，周期更细分。
+  revaluation_note: 特色工艺需求复苏、汽车/工业芯片周期和代工稼动率改善可能带来重估。
+  risk_note: AI 直接相关度不如光通信/数据中心票，避免被主题过度牵连。
+
+EOSE:
+  name: Eos Energy Enterprises
+  bucket: 工业 / 基建 / 电力
+  type: 高波动观察
+  quality_note: 长时储能和电网侧电池标的，和电力基础设施主题相关。
+  revaluation_note: 电网储能需求、订单和融资改善可能推动重估。
+  risk_note: 小盘高波动，商业化和融资风险高。
+
+SEI:
+  name: Solaris Energy Infrastructure
+  bucket: 工业 / 基建 / 电力
+  type: 重估趋势
+  quality_note: 能源/电力基础设施相关，可能被市场纳入 AI 数据中心电力链。
+  revaluation_note: 移动电力、能源基础设施和数据中心电力需求可能带来重估。
+  risk_note: 主题识别容易过热，必须结合真实订单和现金流验证。

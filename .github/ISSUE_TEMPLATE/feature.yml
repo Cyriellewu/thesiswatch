@@ -1,0 +1,71 @@
+name: Feature request
+description: Propose a new rule, engine refinement, data adapter, or UI state — keep it honest, local-first, and offline-testable.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        AlphaWatch is a **thesis-change monitor**, not a buy/sell scorer. Proposals
+        should keep it honest (facts over guesses), local-first (no private data
+        leaves the machine), and offline-testable (pure logic in `tasks/`).
+        Please read `CONTRIBUTING.md` before filing.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / user need
+      description: What decision or blind spot does this address? What silent failure does it fix?
+      placeholder: |
+        e.g. As a long-term holder I can't tell whether today's status change came from new evidence or just stale data aging out.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the rule, metric, adapter, or UI state. How should it behave on missing/stale/conflicting data?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Thesis ledger / confidence
+        - Thesis Delta
+        - Status engine (No action / Watch / Re-evaluate)
+        - Why-changed / Evidence sheet
+        - Conviction / focus ranking
+        - Exposure / what-if simulation
+        - Investment Committee
+        - Decision history / accountability
+        - Data-provider adapter
+        - UI (loading / stale / partial / conflicting states)
+        - Docs / examples
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: honesty
+    attributes:
+      label: Honesty & privacy considerations
+      description: How does this avoid fabrication (every number traceable to a signal/user input) and keep private data local?
+      placeholder: |
+        - Numbers come from: ...
+        - No holdings/theses/keys enter git, logs, or outbound requests.
+    validations:
+      required: true
+
+  - type: textarea
+    id: testability
+    attributes:
+      label: How would it be tested offline?
+      description: What pure function(s) in tasks/ and unit test(s) would cover it (no network, no key, no live market)?
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

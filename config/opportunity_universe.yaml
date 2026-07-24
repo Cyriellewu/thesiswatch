@@ -1,0 +1,32 @@
+# 机会雷达观测池（可与持仓重合）。第一版小而精，后续再加。
+tickers:
+  - symbol: CRDO
+    theme: "AI 数据中心互联 / 光连接"
+  - symbol: ALAB
+    theme: "AI 数据中心相关（财报与市场情绪可参考）"
+  - symbol: OKLO
+    theme: "SMR / 核电主题"
+  - symbol: VST
+    theme: "电力与数据中心供电"
+  - symbol: BE
+    theme: "燃料电池 / 数据中心电力"
+  - symbol: CRWV
+    theme: "AI 云算力 / 数据中心"
+  - symbol: INTC
+    theme: "AI PC / 半导体重估 / Foundry"
+  - symbol: LITE
+    theme: "光通信 / AI 数据中心互联"
+  - symbol: CORZ
+    theme: "数据中心 / HPC / 比特币矿转 AI 算力"
+  - symbol: APLD
+    theme: "Applied Digital / AI 数据中心"
+  - symbol: CIFR
+    theme: "比特币矿转 HPC / AI 算力"
+  - symbol: COHR
+    theme: "光模块 / 光通信 / AI 数据中心"
+  - symbol: TSEM
+    theme: "Tower Semiconductor / 模拟半导体"
+  - symbol: EOSE
+    theme: "储能 / 电网侧电池"
+  - symbol: SEI
+    theme: "Solaris Energy Infrastructure / 电力基础设施"

@@ -1,0 +1,30 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+data/*.db
+data/*.sqlite3
+.idea/
+.vscode/
+.streamlit/secrets.toml
+
+# private user holdings (seeded from watchlist.example.yaml)
+config/watchlist.yaml
+
+# private thesis ledger (user's investment theses)
+data/thesis_ledger.json
+
+# encrypted broker credentials + key (never commit)
+data/.secret.key
+data/.broker_creds.enc
+
+# private decision history
+data/decision_history.json
+
+# private runtime data (caches, equity curve, db)
+data/cache/
+data/*.db
+data/*.db-shm
+data/*.db-wal
+data/*.sqlite3

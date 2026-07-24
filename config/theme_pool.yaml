@@ -1,0 +1,85 @@
+AI_infrastructure:
+  description: "AI 算力、数据中心、电力和基础设施"
+  symbols: [NVDA, AVGO, VRT, CEG, VST, ETN, BE, IREN, APLD, CORZ, CRWV, SNDK, LITE, COHR]
+
+memory_storage:
+  description: "AI 存储、HBM、NAND、DRAM、数据中心存储"
+  symbols: [SNDK, MU, WDC, STX, LITE]
+  tradable_candidates: [SNDK, MU, WDC, STX, LITE]
+  theme_signal_symbols: [SSNLF, 005930.KS, 005935.KS, 000660.KS]
+  alternatives: [MU, SNDK, WDC, STX, EWY]
+  notes: "Samsung/SSNLF 与 SK Hynix 主要作为 AI memory / HBM 主题信号，不一定作为直接买入候选。"
+
+HBM_AI_memory:
+  description: "AI HBM / DRAM / NAND memory cycle"
+  tradable_candidates: [MU, SNDK, WDC, STX]
+  theme_signal_symbols: [SSNLF, 005930.KS, 000660.KS]
+  alternatives: [MU, SNDK, WDC, EWY]
+  notes: "海外/OTC ticker 作为主题温度计；如果异动，只提醒主题，不提示追买。"
+
+aliases:
+  SSNLF:
+    name: "Samsung Electronics"
+    primary_exchange: "OTC / Korea"
+    tradable_status: "theme_signal_only_or_otc"
+    direct_buy_allowed: false
+    fallback_symbols: [005930.KS, 005935.KS]
+    aliases:
+      - Samsung
+      - Samsung Electronics
+      - Samsung Electronics Co
+      - 005930.KS
+      - Korean memory chipmaker
+      - HBM
+      - DRAM
+      - NAND
+  005930.KS:
+    name: "Samsung Electronics"
+    primary_exchange: "Korea Exchange"
+    tradable_status: "theme_signal_only"
+    direct_buy_allowed: false
+    aliases: [Samsung, Samsung Electronics, HBM, DRAM, NAND]
+  005935.KS:
+    name: "Samsung Electronics Preferred"
+    primary_exchange: "Korea Exchange"
+    tradable_status: "theme_signal_only"
+    direct_buy_allowed: false
+    aliases: [Samsung preferred, Samsung Electronics, HBM, DRAM, NAND]
+  000660.KS:
+    name: "SK Hynix"
+    primary_exchange: "Korea Exchange"
+    tradable_status: "theme_signal_only"
+    direct_buy_allowed: false
+    aliases: [SK Hynix, Hynix, Korean memory chipmaker, HBM, DRAM]
+
+power_grid:
+  description: "电力、电网、AI 数据中心用电"
+  symbols: [CEG, VST, VRT, ETN, NEE, SO, DUK, BE]
+
+nuclear_energy:
+  description: "核电、小型反应堆、清洁电力"
+  symbols: [CEG, OKLO, SMR, NNE]
+
+semiconductor:
+  description: "芯片、半导体、AI 硬件"
+  symbols: [NVDA, AVGO, AMD, TSM, ASML, MU, INTC, ARM]
+
+consumer_defensive:
+  description: "消费防御"
+  symbols: [COST, WMT, PG, KO, PEP, MCD]
+
+healthcare:
+  description: "医疗健康"
+  symbols: [LLY, NVO, JNJ, UNH, TMO, ISRG, ABBV, ABT, MRK, ELV, SYK, WAT, IDXX]
+
+financial_payment:
+  description: "金融支付"
+  symbols: [V, MA, JPM, AXP, BRK-B, BRK.B, BX, BLK, SPGI]
+
+industrial_quality:
+  description: "工业、基建、运输和家装质量股"
+  symbols: [CAT, DE, ETN, GE, RTX, HON, UNP, HD, LOW]
+
+energy_cycle:
+  description: "能源、油气和电力周期"
+  symbols: [XOM, CVX, OXY, VST, CEG, NEE, DUK, SO, OKLO]

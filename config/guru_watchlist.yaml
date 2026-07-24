@@ -1,0 +1,300 @@
+# 大佬作业池 = 候选来源 + 异动雷达加权，不是直接买入信号。
+# 13F 有季度滞后；weight_pct 是公开 13F/聚合页或用户截图录入的组合占比。
+disclaimer: "大佬持仓只用于候选灵感，不是直接买入信号。13F 有滞后，最终仍看价格区间、板块低配、新闻和是否过热。"
+
+sectors:
+  - theme: "AI 基建 / 电力 / 存储"
+    notes: "AI 数据中心、电力、存储和算力基础设施。适合重大异动雷达，不适合无脑追高。"
+    gurus:
+      - manager: "Situational Awareness LP"
+        person: "Leopold Aschenbrenner"
+        style: "AI 基建 / 电力 / 数据中心 / 存储"
+        quarter: "Q4 2025"
+        holding_date: "2025-12-31"
+        filing_date: "2026-02-11"
+        source_type: "13F / 用户截图录入"
+    symbols:
+      - symbol: BE
+        name: "Bloom Energy"
+        weight_pct: 15.9
+        base_score: 5
+        top10: true
+        high_vol: true
+        thesis: "Situational Awareness 第一大披露仓位；AI 电力链高波动重估候选。"
+      - symbol: CRWV
+        name: "CoreWeave"
+        weight_pct: 7.9
+        base_score: 4
+        top10: true
+        high_vol: true
+        thesis: "AI 算力租赁/数据中心链条；波动很高，只做异动雷达。"
+      - symbol: CRWV
+        name: "CoreWeave CALL"
+        position_type: "call"
+        weight_pct: 14.0
+        base_score: 4
+        top10: true
+        high_vol: true
+        option_like: true
+        thesis: "期权仓位代表方向性暴露，不等于普通股稳健持仓。"
+      - symbol: INTC
+        name: "Intel CALL"
+        position_type: "call"
+        weight_pct: 13.5
+        base_score: 3
+        top10: true
+        option_like: true
+        thesis: "期权仓位，更多是主题/重估信号，不作为稳健买入依据。"
+      - symbol: LITE
+        name: "Lumentum"
+        weight_pct: 8.7
+        base_score: 4
+        top10: true
+        high_vol: true
+        thesis: "光通信/AI 数据中心链条候选。"
+      - symbol: CORZ
+        name: "Core Scientific"
+        weight_pct: 7.6
+        base_score: 4
+        top10: true
+        high_vol: true
+        thesis: "AI 数据中心/算力基础设施高波动候选。"
+      - symbol: IREN
+        name: "IREN"
+        weight_pct: 6.0
+        base_score: 4
+        top10: true
+        high_vol: true
+        thesis: "AI 数据中心重估候选，涨多只提醒不追高。"
+      - symbol: APLD
+        name: "Applied Digital"
+        weight_pct: 5.0
+        base_score: 3
+        high_vol: true
+        thesis: "AI 数据中心高波动观察。"
+      - symbol: SNDK
+        name: "SanDisk"
+        weight_pct: 4.5
+        base_score: 4
+        high_vol: true
+        thesis: "存储/AI 数据中心存储重估候选，重大异动必须提醒。"
+      - symbol: CIFR
+        name: "Cipher Mining"
+        base_score: 2
+        high_vol: true
+        thesis: "截图中出现但未录入精确占比；仅作为高波动主题雷达。"
+      - symbol: COHR
+        name: "Coherent"
+        base_score: 3
+        high_vol: true
+        thesis: "光通信/AI 数据中心链条，未录入精确占比。"
+      - symbol: TSEM
+        name: "Tower Semiconductor"
+        base_score: 2
+        high_vol: true
+        thesis: "半导体制造主题候选，未录入精确占比。"
+      - symbol: EOSE
+        name: "Eos Energy"
+        base_score: 2
+        high_vol: true
+        thesis: "储能/电力主题候选，未录入精确占比。"
+      - symbol: SEI
+        name: "Solaris Energy"
+        base_score: 2
+        high_vol: true
+        thesis: "能源/数据中心周边主题候选，未录入精确占比。"
+
+  - theme: "科技成长 / AI 龙头"
+    gurus:
+      - manager: "Coatue Management"
+        person: "Philippe Laffont"
+        style: "科技成长 / AI 龙头"
+        quarter: "Q4 2025"
+        holding_date: "2025-12-31"
+        source_type: "13F 聚合页"
+    symbols:
+      - symbol: TSM
+        weight_pct: 6.56
+        base_score: 5
+        top10: true
+      - symbol: MSFT
+        weight_pct: 6.26
+        base_score: 5
+        top10: true
+      - symbol: META
+        weight_pct: 6.25
+        base_score: 5
+        top10: true
+      - symbol: AMZN
+        weight_pct: 5.74
+        base_score: 5
+        top10: true
+      - symbol: GEV
+        base_score: 4
+        top10: true
+        thesis: "Coatue top holding 之一；AI 电力/工业重估线索。"
+
+  - theme: "消费质量 / 金融 / 能源"
+    gurus:
+      - manager: "Berkshire Hathaway"
+        person: "Warren Buffett"
+        style: "消费质量 / 金融 / 能源"
+        quarter: "Q4 2025"
+        holding_date: "2025-12-31"
+        source_type: "13F 聚合页"
+    symbols:
+      - symbol: AAPL
+        weight_pct: 22.60
+        base_score: 4
+        top10: true
+      - symbol: AXP
+        weight_pct: 20.46
+        base_score: 5
+        top10: true
+      - symbol: BAC
+        weight_pct: 10.38
+        base_score: 4
+        top10: true
+      - symbol: KO
+        weight_pct: 10.20
+        base_score: 5
+        top10: true
+      - symbol: CVX
+        weight_pct: 7.24
+        base_score: 4
+        top10: true
+      - symbol: BRK.B
+        base_score: 5
+        thesis: "更适合作为 Berkshire 风格的一篮子质量仓替代。"
+
+  - theme: "质量复利 / 医疗 / 支付"
+    gurus:
+      - manager: "Fundsmith LLP"
+        person: "Terry Smith"
+        style: "高质量复利 / 医疗 / 支付"
+        quarter: "Q4 2025"
+        holding_date: "2025-12-31"
+        source_type: "13F 聚合页"
+    symbols:
+      - symbol: WAT
+        weight_pct: 7.90
+        base_score: 5
+        top10: true
+      - symbol: SYK
+        weight_pct: 7.57
+        base_score: 5
+        top10: true
+      - symbol: IDXX
+        weight_pct: 7.42
+        base_score: 5
+        top10: true
+      - symbol: V
+        weight_pct: 7.24
+        base_score: 5
+        top10: true
+      - symbol: MAR
+        weight_pct: 7.21
+        base_score: 4
+        top10: true
+
+  - theme: "集中质量 / 平台"
+    gurus:
+      - manager: "Pershing Square Capital Management"
+        person: "Bill Ackman"
+        style: "集中质量 / 平台 / 资本配置"
+        quarter: "Q4 2025"
+        holding_date: "2025-12-31"
+        source_type: "13F 聚合页"
+    symbols:
+      - symbol: BN
+        weight_pct: 18.15
+        base_score: 5
+        top10: true
+      - symbol: UBER
+        weight_pct: 15.90
+        base_score: 4
+        top10: true
+      - symbol: AMZN
+        weight_pct: 14.28
+        base_score: 5
+        top10: true
+      - symbol: GOOG
+        weight_pct: 12.46
+        base_score: 5
+        top10: true
+      - symbol: META
+        weight_pct: 11.37
+        base_score: 5
+        top10: true
+
+  - theme: "宏观机会 / 医疗创新 / 工业周期"
+    gurus:
+      - manager: "Duquesne Family Office"
+        person: "Stanley Druckenmiller"
+        style: "宏观机会 / 医疗创新 / 工业周期"
+        quarter: "Q4 2025"
+        holding_date: "2025-12-31"
+        source_type: "13F 聚合页"
+    symbols:
+      - symbol: NTRA
+        weight_pct: 13.0
+        base_score: 4
+        top10: true
+        high_vol: true
+      - symbol: XLF
+        weight_pct: 6.9
+        base_score: 4
+        top10: true
+      - symbol: INSM
+        weight_pct: 5.9
+        base_score: 3
+        top10: true
+        high_vol: true
+      - symbol: TEVA
+        base_score: 3
+        high_vol: true
+      - symbol: BE
+        base_score: 4
+        new_position: true
+        high_vol: true
+        thesis: "Duquesne 新建仓线索 + Situational Awareness 重仓，双重主题证据。"
+      - symbol: ENTG
+        base_score: 3
+        new_position: true
+      - symbol: LSCC
+        base_score: 3
+        new_position: true
+
+  - theme: "周期 / 半导体存储 / 平台"
+    gurus:
+      - manager: "Appaloosa LP"
+        person: "David Tepper"
+        style: "周期 / 机会 / 半导体存储"
+        quarter: "Q4 2025"
+        holding_date: "2025-12-31"
+        source_type: "13F 聚合页"
+    symbols:
+      - symbol: BABA
+        weight_pct: 10.99
+        base_score: 4
+        top10: true
+      - symbol: GOOG
+        weight_pct: 8.18
+        base_score: 5
+        top10: true
+      - symbol: AMZN
+        weight_pct: 7.34
+        base_score: 5
+        top10: true
+      - symbol: MU
+        weight_pct: 6.25
+        base_score: 5
+        top10: true
+        thesis: "AI memory / HBM / 存储周期中最适合交易的公开大票之一。"
+      - symbol: META
+        base_score: 4
+        top10: true
+      - symbol: EWY
+        base_score: 3
+        added: true
+        thesis: "韩国市场/半导体存储链条的 ETF 线索。"

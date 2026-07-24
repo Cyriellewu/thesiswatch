@@ -1,0 +1,69 @@
+app:
+  name: AlphaWatch
+  timezone_display: America/New_York
+
+data:
+  db_path_env: ALPHA_DB_PATH
+  cache_ttl_quotes_seconds: 300
+  cache_ttl_news_seconds: 900
+
+holdings_alert:
+  pct_yellow: 3
+  pct_orange: 5
+  pct_red: 8
+
+scheduler:
+  # 仅在运行 `python jobs/daemon_scheduler.py` 时生效 —— America/New_York 本地时钟
+  morning_brief_local: "07:00"
+  # （尚未接 ntfy 轮询）预留：持仓轮询间隔（分钟）
+  holdings_poll_minutes: 30
+
+# 常驻：`python -m jobs.daemon` —— NYSE 交易日 + 自动 market_pulse（含虚拟 agent）
+daemon:
+  open_et: "10:00"
+  close_et: "15:30"
+  ntfy_limit: 8
+
+# 投资期限默认值（每账户实际以 agent_accounts.agent_goal_json 为准；Streamlit 可调）
+agent_goal_defaults:
+  horizon: "2w"
+  # horizon: 2w | 1m | 3m | 6m | 1y
+  objective: "maximize_return"
+  # objective: maximize_return | preserve_then_grow
+  risk_mode: "risk_aware"
+  # risk_mode: risk_aware | capital_first
+
+push:
+  # 通知走 ntfy；邮件需在 .env 设置 ALPHA_EMAIL_ENABLED=1 才会发送
+  default_channel: ntfy
+
+intraday_alerts:
+  enabled: true
+  pct_change_threshold: 5
+  volume_days: 5
+  volume_multiplier: 2
+
+# 中短期「纪律提示」引擎（signals/signal_engine.py）：规则化输出，非预测、不下单
+signal_engine:
+  near_pivot_pct: 0.03
+  max_extended_pct: 0.08
+  volume_confirm_ratio: 1.5
+  min_reward_risk: 2.0
+  risk_per_trade_pct: 0.01
+  max_loss_pct: 0.07
+  target_pivot_mult: 1.08
+
+# ETF 每周定投金额（美元，与「是否进入额外加仓带」无关；页面与 zone_context 读取）
+etf_weekly_dca_usd:
+  QQQ: 100
+  VOO: 50
+
+# 智能网格定投（Phase 2）：周内找水坑 + 周五保底 → 仅 ntfy 提醒，不自动下单
+weekly_dca:
+  enabled: true
+  symbols:
+    - QQQ
+    - VOO
+  dip_pct_threshold: -0.5
+  friday_force_et: "15:00"
+  check_interval_minutes: 30

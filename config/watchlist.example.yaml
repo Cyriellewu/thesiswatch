@@ -1,0 +1,30 @@
+# Sample portfolio for ThesisWatch / AlphaWatch (SAMPLE DATA — not real holdings).
+#
+# On first run the app copies this file to `config/watchlist.yaml`, which is
+# gitignored and stays private to you. Edit your real holdings there (or via the
+# in-app "编辑我的持仓" panel). Never commit your real watchlist.yaml.
+#
+# Keys:
+#   account_cash_usd            broker cash (for 总资产 = 股票市值 + 现金)
+#   symbols[].ticker            US ticker
+#   symbols[].qty               shares held
+#   symbols[].avg_cost_usd_per_share   your average cost
+
+account_cash_usd: 5000.0
+
+symbols:
+  - ticker: AAPL
+    qty: 10.0
+    avg_cost_usd_per_share: 180.00
+  - ticker: MSFT
+    qty: 5.0
+    avg_cost_usd_per_share: 380.00
+  - ticker: NVDA
+    qty: 8.0
+    avg_cost_usd_per_share: 120.00
+  - ticker: VOO
+    qty: 4.0
+    avg_cost_usd_per_share: 480.00
+  - ticker: QQQ
+    qty: 3.0
+    avg_cost_usd_per_share: 460.00
