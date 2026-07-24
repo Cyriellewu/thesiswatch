@@ -171,6 +171,7 @@ def build_advice() -> dict[str, Any]:
     for sym in holdings:
         snap = symbol_indicator_snapshot(sym)
         if snap:
+            is_degraded = False
             px = float(snap.get("px") or 0.0)
             chg = float(snap.get("chg_pct") or 0.0)
             verdict = verdict_for_snapshot(snap)
@@ -181,6 +182,7 @@ def build_advice() -> dict[str, Any]:
             rsi_v = snap.get("rsi")
             pos_52 = snap.get("pos_52")
         else:
+            is_degraded = True
             degraded += 1
             fq = fallback.get(sym.upper(), {})
             px = float(fq.get("px") or 0.0)
@@ -211,6 +213,7 @@ def build_advice() -> dict[str, Any]:
             "mv": mv,
             "needs_attention": _action_needs_attention(action),
             "priority": _action_priority(action) + min(30, abs(chg) * 4),
+            "degraded": is_degraded,
         })
 
     # 仓位权重 + 集中度

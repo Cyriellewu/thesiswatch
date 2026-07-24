@@ -92,8 +92,8 @@ def _holding(stock: dict[str, Any], focus: dict[str, Any] | None, status_obj) ->
         "dayChangePct": round(float(stock.get("chg_pct") or 0.0), 2),
         "currency": "USD",
         "weightPct": int(round(float(stock.get("weight_pct") or 0))),
-        "priceObservedAt": datetime.now(timezone.utc).isoformat(),
-        "dataState": "ok" if not stock.get("degraded") else "partial_data",
+        "priceObservedAt": None,
+        "dataState": "partial_data" if stock.get("degraded") else "ok",
         "cardState": "default",
     }
 
@@ -122,8 +122,11 @@ def today() -> ApiEnvelope:
             return [h for h in holdings if h["status"] == name]
 
         meta = today_meta(advice)
+        # Derive the label date from the engine's own SGT compute time so `date` and
+        # `fetched_at` refer to the same day (UTC now() disagrees by a day pre-08:00 SGT).
+        as_of_date = str(advice.get("as_of", ""))[:10]
         data = {
-            "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "date": as_of_date or None,
             "overallStatus": ps.overall,
             "needsAttention": bucket("re_evaluate"),
             "worthWatching": bucket("watch"),

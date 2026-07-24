@@ -74,7 +74,10 @@ def today_meta(advice: dict[str, Any]) -> dict[str, Any]:
     """
     stocks = advice.get("stocks") or []
     total = len(stocks)
-    degraded = int(advice.get("data_degraded") or 0)
+    # Cross-check the aggregate count against per-holding degraded flags so the envelope
+    # can never report "ok" while individual rows are "partial_data" (single source of truth).
+    per_row_degraded = sum(1 for s in stocks if s.get("degraded"))
+    degraded = max(int(advice.get("data_degraded") or 0), per_row_degraded)
     source = str(advice.get("source") or "rule_based")
 
     fetched_at = parse_sgt(str(advice.get("as_of", "")))

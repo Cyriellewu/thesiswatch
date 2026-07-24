@@ -51,6 +51,15 @@ def test_fetched_at_is_real_engine_time_or_null():
     assert any("compute time" in w for w in bad["warnings"])
 
 
+def test_state_crosscheck_uses_per_row_degraded_when_count_missing():
+    # data_degraded absent, but a per-row flag is set -> must NOT report "ok".
+    advice = {"stocks": [{"ticker": "MSFT", "degraded": True}, {"ticker": "NVDA"}],
+              "as_of": "2026-07-25 00:40", "source": "rule_based"}
+    meta = today_meta(advice)
+    assert meta["state"] == "partial"
+    assert any("1 of 2" in w for w in meta["warnings"])
+
+
 def test_parse_sgt_roundtrip_and_failure():
     assert parse_sgt("2026-07-25 09:05") == "2026-07-25T09:05:00+08:00"
     assert parse_sgt("") is None

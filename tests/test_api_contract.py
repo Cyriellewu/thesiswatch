@@ -44,6 +44,19 @@ def test_today_freshness_is_not_fabricated(client):
     assert body["observed_at"] is None
     # The retired fabricated field must be gone.
     assert "updatedAgoMinutes" not in (body.get("data") or {})
+    # Per-holding rows must also not fabricate an observation time.
+    data = body.get("data") or {}
+    for bucket in ("needsAttention", "worthWatching", "noMaterialChange"):
+        for row in data.get(bucket, []):
+            assert row.get("priceObservedAt") is None
+
+
+def test_today_date_agrees_with_fetched_at_day(client):
+    body = client.get("/api/today").json()
+    data = body.get("data") or {}
+    if data.get("date") and body.get("fetched_at"):
+        # date (SGT) must match the day component of fetched_at (SGT) — no UTC drift.
+        assert data["date"] == body["fetched_at"][:10]
 
 
 def test_today_mode_is_demo_when_offline(client):
