@@ -14,6 +14,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+import logging
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -25,6 +26,7 @@ from tasks.holding_commentary import symbol_indicator_snapshot, verdict_for_snap
 
 SGT = ZoneInfo("Asia/Shanghai")
 _REPO = Path(__file__).resolve().parents[1]
+logger = logging.getLogger(__name__)
 
 # 英文动作 -> (中文, 关注度基分, 是否"需要注意")
 ACTION_META: dict[str, tuple[str, int, bool]] = {
@@ -57,7 +59,7 @@ def _action_needs_attention(action: str) -> bool:
     return ACTION_META.get(action, (action, 30, False))[2]
 
 
-def _load_cash() -> float:
+def _load_cash(load_warnings: list[str]) -> float:
     try:
         from data_layer.watchlist_resolver import watchlist_path  # noqa: PLC0415
 
@@ -65,12 +67,13 @@ def _load_cash() -> float:
         for k in ("account_cash_usd", "cash_usd", "cash"):
             if raw.get(k) is not None:
                 return max(0.0, float(raw[k]))
-    except Exception:
-        pass
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("Failed to load cash from watchlist")
+        load_warnings.append(f"cash unavailable: {exc}")
     return 0.0
 
 
-def _positions() -> dict[str, dict[str, float]]:
+def _positions(load_warnings: list[str]) -> dict[str, dict[str, float]]:
     """{ticker: {qty, avg}} from watchlist.yaml。"""
     out: dict[str, dict[str, float]] = {}
     try:
@@ -79,12 +82,13 @@ def _positions() -> dict[str, dict[str, float]]:
 
         for p in load_positions(watchlist_path()):
             out[p.ticker.upper()] = {"qty": float(p.qty), "avg": float(p.avg_cost_per_share)}
-    except Exception:
-        pass
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("Failed to load positions")
+        load_warnings.append(f"positions unavailable: {exc}")
     return out
 
 
-def _fallback_quotes(symbols: list[str]) -> dict[str, dict[str, float]]:
+def _fallback_quotes(symbols: list[str], load_warnings: list[str]) -> dict[str, dict[str, float]]:
     """当日线快照缺失时,用 fetch_quotes 兜底 px/chg(离线则 demo)。"""
     out: dict[str, dict[str, float]] = {}
     try:
@@ -92,8 +96,9 @@ def _fallback_quotes(symbols: list[str]) -> dict[str, dict[str, float]]:
 
         for q in fetch_quotes(symbols) or []:
             out[str(q.symbol).upper()] = {"px": float(q.px), "chg_pct": float(q.chg_pct)}
-    except Exception:
-        pass
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("Failed to load fallback quotes")
+        load_warnings.append(f"fallback quotes unavailable: {exc}")
     return out
 
 
@@ -158,10 +163,16 @@ def _headline(regime_label: str, stocks: list[dict[str, Any]], flags: list[str])
 def build_advice() -> dict[str, Any]:
     """产出今日建议 JSON。纯函数、无副作用、可离线。"""
 
-    holdings = load_watchlist_tickers()
-    pos = _positions()
-    cash = _load_cash()
-    fallback = _fallback_quotes(holdings)
+    load_warnings: list[str] = []
+    try:
+        holdings = load_watchlist_tickers()
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("Failed to load watchlist tickers")
+        load_warnings.append(f"watchlist load failed: {exc}")
+        holdings = []
+    pos = _positions(load_warnings)
+    cash = _load_cash(load_warnings)
+    fallback = _fallback_quotes(holdings, load_warnings)
 
     stocks: list[dict[str, Any]] = []
     total_mv = 0.0
@@ -294,6 +305,7 @@ def build_advice() -> dict[str, Any]:
 
     return {
         "as_of": datetime.now(SGT).strftime("%Y-%m-%d %H:%M"),
+        "observed_at": None,
         "as_of_label": datetime.now(SGT).strftime("%m/%d %H:%M SGT"),
         "headline_zh": headline,
         "portfolio": {
@@ -315,6 +327,7 @@ def build_advice() -> dict[str, Any]:
         "news": news,
         "data_degraded": degraded,
         "source": "rule_based",
+        "load_warnings": load_warnings,
     }
 
 

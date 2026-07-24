@@ -97,11 +97,7 @@ _DEMO_THESIS = {
         "ticker": "MSFT", "status": "watch", "oneLiner": "Thesis strengthened this week",
         "conviction": 78, "confidence": "Medium-high", "coveragePct": 82, "horizonMonths": 18,
         "dataState": "ok", "asOf": "2026-07-24T19:52:00Z",
-        "whatChanged": {
-            "d1": [{"label": "Azure guidance improved", "points": 4, "sign": "positive"}],
-            "w1": [{"label": "Azure guidance improved", "points": 4, "sign": "positive"}],
-            "m1": [{"label": "Azure guidance improved", "points": 4, "sign": "positive"}],
-        },
+        "whatChanged": [{"label": "Azure guidance improved", "points": 4, "sign": "positive"}],
         "currentThesis": [{"id": "MSFT-0", "text": "AI demand supports cloud growth."}],
         "supporting": [],
         "risks": [],
@@ -185,6 +181,22 @@ def _mk_envelope(
         sources=sources,
         warnings=warnings,
     )
+
+
+
+
+def _merge_advice_warnings(advice: dict[str, Any], warnings: list[str]) -> None:
+    for msg in advice.get("load_warnings", []) or []:
+        if msg not in warnings:
+            warnings.append(str(msg))
+
+
+def _resolve_primary_observed_at(advice: dict[str, Any], warnings: list[str], *, scope: str) -> datetime | None:
+    observed = _parse_observed_at(str(advice.get("observed_at") or ""))
+    if observed is None:
+        warnings.append("observation time unknown; value derived at generation time")
+        warnings.append(f"observed_at unknown for {scope}")
+    return observed
 
 
 def _holding(
@@ -429,9 +441,8 @@ def today(mode: Mode = "live") -> Envelope[dict[str, Any]]:
             fetched_at=fetched_at,
         )
 
-    observed_at = _parse_observed_at(str(advice.get("as_of") or ""))
-    if observed_at is None:
-        warnings.append("observed_at unknown for today snapshot")
+    _merge_advice_warnings(advice, warnings)
+    observed_at = _resolve_primary_observed_at(advice, warnings, scope="today snapshot")
 
     statuses: list[Any] = []
     overall = "no_action"
@@ -453,6 +464,9 @@ def today(mode: Mode = "live") -> Envelope[dict[str, Any]]:
 
     if not statuses and holdings:
         overall = _overall_from_holdings(holdings)
+
+    if mode == "live" and not holdings:
+        warnings.append("no live holdings available for today")
 
     def bucket(name: str) -> list[dict[str, Any]]:
         return [h for h in holdings if h["status"] == name]
@@ -515,9 +529,8 @@ def exposures(mode: Mode = "live") -> Envelope[list[dict[str, Any]]]:
             fetched_at=fetched_at,
         )
 
-    observed_at = _parse_observed_at(str(advice.get("as_of") or ""))
-    if observed_at is None:
-        warnings.append("observed_at unknown for exposures")
+    _merge_advice_warnings(advice, warnings)
+    observed_at = _resolve_primary_observed_at(advice, warnings, scope="exposures")
 
     try:
         positions = [
@@ -599,8 +612,20 @@ def why(ticker: str, mode: Mode = "live") -> Envelope[dict[str, Any]]:
             fetched_at=fetched_at,
         )
 
-    observed_at = _parse_observed_at(str(advice.get("as_of") or ""))
-    data = _compute_why_live(ticker, advice, observed_at=observed_at, warnings=warnings, sources=sources)
+    _merge_advice_warnings(advice, warnings)
+    observed_at = _resolve_primary_observed_at(advice, warnings, scope=f"{ticker.upper()} why")
+    try:
+        data = _compute_why_live(ticker, advice, observed_at=observed_at, warnings=warnings, sources=sources)
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("Failed to build why payload for %s", ticker)
+        return _mk_envelope(
+            data=None,
+            mode=mode,
+            warnings=warnings + [f"why build failed for {ticker.upper()}: {exc}"],
+            sources=sources,
+            observed_at=observed_at,
+            fetched_at=fetched_at,
+        )
     return _mk_envelope(
         data=data,
         mode=mode,
@@ -647,6 +672,8 @@ def evidence(ticker: str, mode: Mode = "live") -> Envelope[list[dict[str, Any]]]
             fetched_at=fetched_at,
         )
 
+    _merge_advice_warnings(advice, warnings)
+
     try:
         data, observed_at = _compute_evidence_live(ticker, advice, fetched_at=fetched_at, warnings=warnings, sources=sources)
     except Exception as exc:  # noqa: BLE001
@@ -684,7 +711,7 @@ def thesis(ticker: str, mode: Mode = "live") -> Envelope[dict[str, Any]]:
             "conviction": 50,
             "confidence": "Medium",
             "coveragePct": 0,
-            "whatChanged": {"d1": [], "w1": [], "m1": []},
+            "whatChanged": [],
             "currentThesis": [],
             "supporting": [],
             "risks": [],
@@ -720,9 +747,8 @@ def thesis(ticker: str, mode: Mode = "live") -> Envelope[dict[str, Any]]:
             fetched_at=fetched_at,
         )
 
-    observed_at = _parse_observed_at(str(advice.get("as_of") or ""))
-    if observed_at is None:
-        warnings.append(f"observed_at unknown for {tk} thesis")
+    _merge_advice_warnings(advice, warnings)
+    observed_at = _resolve_primary_observed_at(advice, warnings, scope=f"{tk} thesis")
 
     try:
         from tasks import decision_history as dh, thesis_store  # noqa: PLC0415
@@ -766,11 +792,7 @@ def thesis(ticker: str, mode: Mode = "live") -> Envelope[dict[str, Any]]:
             "horizonMonths": 18,
             "dataState": "ok",
             "asOf": observed_at.isoformat() if observed_at else None,
-            "whatChanged": {
-                "d1": why_data["drivers"],
-                "w1": why_data["drivers"],
-                "m1": why_data["drivers"],
-            },
+            "whatChanged": why_data["drivers"],
             "currentThesis": [{"id": f"{tk}-{i}", "text": cl} for i, cl in enumerate(t.claims)],
             "supporting": [e for e in ev_data if e["sign"] == "positive"],
             "risks": [e for e in ev_data if e["sign"] == "negative"],
