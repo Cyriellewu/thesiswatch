@@ -26,3 +26,40 @@ Confirm ADR-005/006: merged Thesis Detail + responsive split-view (desktop) / si
 
 ## Q6 — Unfinished features
 Confirm hiding Ask and What-if until real (vs labeling them "Preview"). Provisional: hide.
+
+## Q7 — BLOCKER: two parallel envelope implementations collided on this branch (needs your call)
+While the overnight loop was mid-slice, a second commit landed on `overnight/truthful-core-loop`:
+`39f292a "api: add typed honesty envelopes"` (author Cyriellewu, 2026-07-24 18:34 BST / 2026-07-25 01:34 SGT).
+It independently implements the SAME typed-envelope feature the loop was building, so the branch now
+has **two implementations of the same idea**:
+
+- **A — `api_models.py` + rewritten `api_server.py`** (the `39f292a` commit): broader — envelopes
+  **all** endpoints (today/exposures/why/evidence/thesis), `Envelope[T]` with datetime-typed
+  timestamps. Tests: `tests/test_api_contract.py` (rewritten). PASSES.
+- **B — `api_envelope.py` + `/api/today` only** (the loop's commits d7b6171/ef7e321): narrower but with
+  two honesty properties A currently lacks (see below). Tests: `tests/test_api_envelope.py`. PASSES.
+  `api_envelope.py` is now **orphaned** — `api_server.py` at HEAD imports A, not B.
+
+Current state is NOT broken: both test sets pass (12), and the committed frontend consumes
+`/api/today`'s envelope and works with A. The problem is duplication + a couple of honesty regressions in A.
+
+**Honesty concerns found in A (`api_server.py` @ 39f292a), which B had deliberately avoided:**
+1. A sets `observed_at = as_of` (the engine's **compute** time), conflating it with per-source
+   **observation** time. B concluded `as_of` is fetch-time only and set `observed_at = null` + a warning.
+2. Timezone bug: A parses the SGT `as_of` string as UTC (`...Z`). Live payload shows
+   `observed_at = 2026-07-25T00:38:00Z` occurring AFTER `fetched_at = 2026-07-24T17:38:10Z` — an
+   internal contradiction (`updatedAgoMinutes` then floors to 0).
+3. A still emits per-holding `priceObservedAt` + `updatedAgoMinutes` (hardcoded in its demo branch);
+   the frontend no longer uses these, but they remain in the payload.
+
+**Decision needed:** pick ONE canonical envelope module and delete the other, then reconcile A's
+timestamp honesty (null-or-real `observed_at`, fix SGT→UTC). Recommended: **keep A's breadth**
+(all endpoints enveloped) but **port B's timestamp honesty into it** (observed_at null-not-`as_of`,
+correct SGT offset), then delete `api_envelope.py`/`test_api_envelope.py`. The loop did NOT delete or
+merge either side — this is your call and it touches files another actor is editing.
+
+**Process note:** per the freeze's HARD RULES ("two agents must not edit the same files") the loop has
+STOPPED touching the backend envelope files (`api_server.py`, `api_models.py`, `api_envelope.py`,
+`tests/test_api_contract.py`) to avoid a concurrent-edit collision, and is holding further backend work
+until you resolve ownership.
+

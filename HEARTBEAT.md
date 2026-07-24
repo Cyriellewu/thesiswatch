@@ -119,6 +119,17 @@ Stop and record a blocker when:
 - Next action: `tcl-hide` (hide Ask, What-if, Watchlist — removes the last stub surfaces) or `tcl-merge-detail`; both unblocked. `tcl-oss` also independent.
 - Willow decision required: no.
 
+### 2026-07-25 01:40 — BLOCKER: concurrent second agent committed a parallel envelope impl
+
+- Agent/model: Kiera (orchestrator) — STOP condition triggered
+- Task ID: blocker-collision
+- Stop condition: "two agents are editing the same files." Commit `39f292a "api: add typed honesty envelopes"` (author Cyriellewu, 2026-07-24 18:34 BST) landed on this branch during the frontend-review wait window. It independently rewrites `api_server.py` (+736/-212), adds `api_models.py`, and rewrites `tests/test_api_contract.py` — a second implementation of the same typed-envelope feature the loop built in `api_envelope.py`.
+- Assessment (read-only, no shared files edited): branch is NOT broken — `api_models.Envelope` has the same JSON contract as `api_envelope.ApiEnvelope`; both test suites pass (12); the committed frontend consumes `/api/today`'s envelope and is compatible with the `39f292a` backend. But (a) `api_envelope.py`/`test_api_envelope.py` are now orphaned duplicates, and (b) the `39f292a` backend re-introduces two honesty issues this loop had avoided: `observed_at = as_of` (compute-time conflated with observation-time) and an SGT-parsed-as-UTC bug making `observed_at` land after `fetched_at`.
+- Action: recorded the collision + a concrete resolution recommendation as Q7 in docs/DECISIONS_FOR_WILLOW.md. STOPPED all backend-envelope edits (`api_server.py`, `api_models.py`, `api_envelope.py`, `tests/test_api_contract.py`) to avoid compounding the concurrent edit. Did NOT delete or merge either implementation — ownership is Willow's call.
+- Willow decision required: YES — Q7 (choose canonical envelope module; reconcile timestamp honesty). Until then the loop holds backend work and will not open a PR that merges either side.
+- Next action: hold backend; given an active second writer the safe default is to pause implementation and re-check for concurrent commits at the start of the next loop before touching any file.
+
+
 
 
 
