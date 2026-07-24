@@ -29,11 +29,25 @@ import {
 import { getMode } from "./mode";
 
 const API = (import.meta as any).env?.VITE_API ?? "/api";
+const ENVELOPE_STATES = ["ok", "stale", "partial", "unavailable"] as const;
 
 function unavailable<T>(reason: string): ApiEnvelope<T> {
   return {
     data: null, state: "unavailable", mode: getMode(),
     observed_at: null, fetched_at: null, sources: [], warnings: [reason],
+  };
+}
+
+function isEnvelopeState(state: unknown): state is ApiEnvelope<unknown>["state"] {
+  return typeof state === "string" && ENVELOPE_STATES.includes(state as (typeof ENVELOPE_STATES)[number]);
+}
+
+function normalizeEnvelope<T>(body: ApiEnvelope<T>): ApiEnvelope<T> {
+  return {
+    ...body,
+    mode: body.mode === "demo" ? "demo" : "live",
+    warnings: Array.isArray(body.warnings) ? body.warnings : [],
+    sources: Array.isArray(body.sources) ? body.sources : [],
   };
 }
 
@@ -50,18 +64,10 @@ export async function fetchToday(): Promise<ApiEnvelope<DailyBrief>> {
     const r = await fetch(`${API}/today`, { signal: AbortSignal.timeout(20000) });
     if (!r.ok) return unavailable<DailyBrief>(`HTTP ${r.status} from /today`);
     const body = (await r.json()) as ApiEnvelope<DailyBrief>;
-    const states = ["ok", "stale", "partial", "unavailable"];
-    if (!body || typeof body.state !== "string" || !states.includes(body.state)) {
+    if (!body || !isEnvelopeState(body.state)) {
       return unavailable<DailyBrief>("Malformed envelope from /today");
     }
-    // Normalize array/mode fields so consumers can dereference warnings/sources safely
-    // even if a backend response omits or malforms them.
-    return {
-      ...body,
-      mode: body.mode === "demo" ? "demo" : "live",
-      warnings: Array.isArray(body.warnings) ? body.warnings : [],
-      sources: Array.isArray(body.sources) ? body.sources : [],
-    };
+    return normalizeEnvelope(body);
   } catch (e) {
     return unavailable<DailyBrief>(`Request to /today failed: ${(e as Error).message}`);
   }
@@ -74,8 +80,7 @@ async function detail<T>(path: string, mock: T, empty: T): Promise<T> {
     const r = await fetch(`${API}${path}`, { signal: AbortSignal.timeout(20000) });
     if (!r.ok) return empty;
     const body = (await r.json()) as ApiEnvelope<T>;
-    const states = ["ok", "stale", "partial", "unavailable"];
-    if (!body || typeof body.state !== "string" || !states.includes(body.state)) {
+    if (!body || !isEnvelopeState(body.state)) {
       return empty;
     }
     if (body.state === "unavailable" || body.data == null) {
@@ -84,6 +89,60 @@ async function detail<T>(path: string, mock: T, empty: T): Promise<T> {
     return body.data;
   } catch {
     return empty; // honest: no data, not fabricated mock
+  }
+}
+
+/** Envelope-aware thesis fetch for ThesisDetail — returns full state info for honest rendering. */
+export async function fetchThesisEnvelope(t: string): Promise<ApiEnvelope<StockThesis>> {
+  if (getMode() === "demo") {
+    const d = thesisByTicker[t] ?? null;
+    return {
+      data: d,
+      state: d ? "ok" : "unavailable",
+      mode: "demo",
+      observed_at: null,
+      fetched_at: null,
+      sources: ["bundled-sample"],
+      warnings: ["Demo mode: bundled sample data."],
+    };
+  }
+  try {
+    const r = await fetch(`${API}/thesis/${t}`, { signal: AbortSignal.timeout(20000) });
+    if (!r.ok) return unavailable<StockThesis>(`HTTP ${r.status} from /thesis/${t}`);
+    const body = (await r.json()) as ApiEnvelope<StockThesis>;
+    if (!body || !isEnvelopeState(body.state)) {
+      return unavailable<StockThesis>("Malformed envelope from /thesis");
+    }
+    return normalizeEnvelope(body);
+  } catch (e) {
+    return unavailable<StockThesis>(`/thesis/${t} failed: ${(e as Error).message}`);
+  }
+}
+
+/** Envelope-aware why fetch for ThesisDetail. */
+export async function fetchWhyEnvelope(t: string): Promise<ApiEnvelope<WhyChanged>> {
+  if (getMode() === "demo") {
+    const d = whyChangedByTicker[t] ?? null;
+    return {
+      data: d,
+      state: d ? "ok" : "unavailable",
+      mode: "demo",
+      observed_at: null,
+      fetched_at: null,
+      sources: ["bundled-sample"],
+      warnings: [],
+    };
+  }
+  try {
+    const r = await fetch(`${API}/why/${t}`, { signal: AbortSignal.timeout(20000) });
+    if (!r.ok) return unavailable<WhyChanged>(`HTTP ${r.status} from /why/${t}`);
+    const body = (await r.json()) as ApiEnvelope<WhyChanged>;
+    if (!body || !isEnvelopeState(body.state)) {
+      return unavailable<WhyChanged>("Malformed envelope from /why");
+    }
+    return normalizeEnvelope(body);
+  } catch (e) {
+    return unavailable<WhyChanged>(`/why/${t} failed: ${(e as Error).message}`);
   }
 }
 

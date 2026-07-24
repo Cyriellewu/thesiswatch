@@ -3,18 +3,16 @@ import { BottomNav, type Tab } from "./components/BottomNav";
 import { Sidebar } from "./components/Sidebar";
 import { TodayScreen } from "./screens/TodayScreen";
 import { PortfolioScreen } from "./screens/PortfolioScreen";
-import { StockThesisScreen } from "./screens/StockThesisScreen";
-import { WhyChangedSheet } from "./components/WhyChangedSheet";
-import { EvidenceSheet } from "./components/EvidenceSheet";
+import { ThesisDetail } from "./screens/ThesisDetail";
 
 export function App() {
   const [tab, setTab] = useState<Tab>("today");
-  const [thesisTicker, setThesisTicker] = useState<string | null>(null);
-  const [whyTicker, setWhyTicker] = useState<string | null>(null);
-  const [evidenceTicker, setEvidenceTicker] = useState<string | null>(null);
+  const [selectedTicker, setSelectedTicker] = useState<string | null>(null);
+  const [prevConviction, setPrevConviction] = useState<number | undefined>(undefined);
 
   const goTab = (t: Tab) => {
-    setThesisTicker(null);
+    setSelectedTicker(null);
+    setPrevConviction(undefined);
     setTab(t);
   };
 
@@ -22,44 +20,45 @@ export function App() {
     <div className="bg-app min-h-screen flex">
       <Sidebar tab={tab} onChange={goTab} />
 
-      <div className="flex-1 flex flex-col min-w-0 relative">
-        <main className="flex-1 pt-safe">
-          <div className="mx-auto w-full max-w-6xl">
-            {thesisTicker ? (
-              <StockThesisScreen
-                ticker={thesisTicker}
-                onBack={() => setThesisTicker(null)}
-                onEvidence={setEvidenceTicker}
+      <div className="flex-1 flex min-w-0">
+        <div className={`flex-1 xl:w-[380px] xl:max-w-[380px] xl:shrink-0 xl:border-r xl:border-[color:var(--hairline)] xl:overflow-y-auto xl:h-screen xl:sticky xl:top-0 flex flex-col ${selectedTicker ? "hidden xl:flex" : "flex"}`}>
+          <div className="flex-1">
+            {tab === "today" && (
+              <TodayScreen
+                onOpenThesis={(t, prev) => {
+                  setSelectedTicker(t);
+                  setPrevConviction(prev);
+                }}
+                selectedTicker={selectedTicker}
               />
-            ) : (
-              <>
-                {tab === "today" && (
-                  <TodayScreen
-                    onOpenThesis={setThesisTicker}
-                    onWhyChanged={setWhyTicker}
-                    onEvidence={setEvidenceTicker}
-                  />
-                )}
-                {tab === "portfolio" && <PortfolioScreen />}
-              </>
             )}
+            {tab === "portfolio" && <PortfolioScreen />}
           </div>
-        </main>
+          <div className="lg:hidden">
+            <BottomNav tab={tab} onChange={goTab} />
+          </div>
+        </div>
 
-        <div className="lg:hidden">
-          <BottomNav tab={tab} onChange={goTab} />
+        <div className={`${selectedTicker ? "flex-1" : "hidden xl:flex"} xl:overflow-y-auto xl:h-screen xl:sticky xl:top-0 xl:max-w-[720px] 2xl:mx-auto`}>
+          {selectedTicker ? (
+            <ThesisDetail
+              ticker={selectedTicker}
+              prevConviction={prevConviction}
+              onBack={() => {
+                setSelectedTicker(null);
+                setPrevConviction(undefined);
+              }}
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center p-8 text-secondary text-[15px] text-center">
+              <div>
+                <div className="text-[32px] mb-3 opacity-30">◎</div>
+                Select a holding to view its thesis
+              </div>
+            </div>
+          )}
         </div>
       </div>
-
-      <WhyChangedSheet
-        ticker={whyTicker}
-        onClose={() => setWhyTicker(null)}
-        onOpenEvidence={(t) => {
-          setWhyTicker(null);
-          setEvidenceTicker(t);
-        }}
-      />
-      <EvidenceSheet ticker={evidenceTicker} onClose={() => setEvidenceTicker(null)} />
     </div>
   );
 }

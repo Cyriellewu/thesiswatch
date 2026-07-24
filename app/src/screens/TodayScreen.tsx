@@ -14,12 +14,10 @@ type Load = { status: "loading" } | { status: "done"; env: ApiEnvelope<DailyBrie
 
 export function TodayScreen({
   onOpenThesis,
-  onWhyChanged,
-  onEvidence,
+  selectedTicker,
 }: {
-  onOpenThesis: (t: string) => void;
-  onWhyChanged: (t: string) => void;
-  onEvidence: (t: string) => void;
+  onOpenThesis: (t: string, prevConviction?: number) => void;
+  selectedTicker: string | null;
 }) {
   const [load, setLoad] = useState<Load>({ status: "loading" });
   const [mode, setModeState] = useState<UiMode>(getMode());
@@ -52,7 +50,7 @@ export function TodayScreen({
           env={load.env}
           onRetry={run}
           onSwitchDemo={() => switchMode("demo")}
-          cardProps={{ onOpenThesis, onWhyChanged, onEvidence }}
+          cardProps={{ onOpenThesis, selectedTicker }}
         />
       )}
     </div>
@@ -69,9 +67,8 @@ function Body({
   onRetry: () => void;
   onSwitchDemo: () => void;
   cardProps: {
-    onOpenThesis: (t: string) => void;
-    onWhyChanged: (t: string) => void;
-    onEvidence: (t: string) => void;
+    onOpenThesis: (t: string, prevConviction?: number) => void;
+    selectedTicker: string | null;
   };
 }) {
   // Honest failure: never fake a brief. Show unavailable + retry (+ opt-in demo).
@@ -128,14 +125,24 @@ function Body({
 
       <Section title="Needs attention">
         {needsAttention.map((h) => (
-          <FocusCard key={h.ticker} h={h} {...cardProps} />
+          <FocusCard
+            key={h.ticker}
+            h={h}
+            onOpenThesis={cardProps.onOpenThesis}
+            selected={cardProps.selectedTicker === h.ticker}
+          />
         ))}
       </Section>
 
       {worthWatching.length > 0 && (
         <Section title="Worth watching">
           {worthWatching.map((h) => (
-            <FocusCard key={h.ticker} h={h} {...cardProps} />
+            <FocusCard
+              key={h.ticker}
+              h={h}
+              onOpenThesis={cardProps.onOpenThesis}
+              selected={cardProps.selectedTicker === h.ticker}
+            />
           ))}
         </Section>
       )}
@@ -178,7 +185,7 @@ function FreshnessLine({ env }: { env: ApiEnvelope<DailyBrief> }) {
   return <p className="text-tertiary text-[12px] mt-2">{label}</p>;
 }
 
-function CalmDisclosure({ holdings, onOpenThesis }: { holdings: Holding[]; onOpenThesis: (t: string) => void }) {
+function CalmDisclosure({ holdings, onOpenThesis }: { holdings: Holding[]; onOpenThesis: (t: string, prevConviction?: number) => void }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="mt-6">
@@ -209,10 +216,10 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function CalmRow({ h, onOpenThesis }: { h: Holding; onOpenThesis: (t: string) => void }) {
+function CalmRow({ h, onOpenThesis }: { h: Holding; onOpenThesis: (t: string, prevConviction?: number) => void }) {
   return (
     <button
-      onClick={() => onOpenThesis(h.ticker)}
+      onClick={() => onOpenThesis(h.ticker, h.prevConviction)}
       className="w-full flex items-center justify-between bg-surface rounded-card px-4 py-3 text-left min-h-[44px]"
     >
       <div>
