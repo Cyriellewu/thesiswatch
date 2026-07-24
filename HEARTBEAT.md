@@ -71,3 +71,16 @@ Stop and record a blocker when:
 - Reviewer: cross-audit consistency (5/5 confirm silent fallback + fabricated timestamps).
 - Next action: Phase 3 — implement Truthful Core Loop slice on this branch (typed envelope /api/today, honest states, no silent fallback, hide Ask/What-if, tests). Draft PR only.
 - Willow decision required: Q1-Q6 in DECISIONS_FOR_WILLOW.md (proceeding on provisional choices; reversible pre-merge).
+
+### 2026-07-25 00:55 — Phase 3 (1/6): typed API envelope + honest /api/today
+
+- Agent/model: Kiera (implementer)
+- Task ID: tcl-envelope (SQL todos reset to the 6-item Truthful Core Loop plan; stale ThesisWatch-API todos from a prior context were removed)
+- User outcome: the daily answer now carries an explicit, honest state instead of a fabricated "fresh/ok" — the first step to a trustworthy core loop.
+- Action (smallest coherent change): added pure `api_envelope.py` (`ApiEnvelope[T]` per ADR-001 + `today_meta`/`current_mode`, pydantic-only, no engine); rewrote `/api/today` to return the envelope. `state` derived from real `data_degraded`/holdings count (ok/partial/unavailable); `fetched_at` from the engine's real `as_of`; `observed_at` is **null + warning** (per-source time not tracked) instead of `now()`; removed fabricated `updatedAgoMinutes:0`; engine failure returns an explicit `unavailable` envelope (no silent swallow / 500).
+- Tests: added `tests/test_api_envelope.py` (7 pure, CI-safe) + `tests/test_api_contract.py` (3 TestClient, skips honestly if engine deps absent); added root `conftest.py`. New tests 10/10 pass.
+- Verified facts: full suite 96 passed / 1 failed; the single failure (`test_cache.py::...concurrent_set...`, WinError 5 on a concurrent temp-file rename) reproduces in isolation and is a pre-existing Windows/env flake — `git diff` shows this slice touches only `api_server.py` + new files, not the cache module. Dev note: clean `.venv` was engine-bare; installed the already-declared requirements (fastapi/httpx/pydantic/pandas/numpy/...) to run the API + contract tests.
+- Reviewer: independent review pending (next loop).
+- Next action: independent review of this diff, then `tcl-frontend` (api.ts: remove silent mock fallback; Demo/Live mode; TodayScreen `unavailable` state) — depends on this envelope.
+- Willow decision required: no (within approved slice; branch only, no PR opened yet).
+
