@@ -108,5 +108,17 @@ Stop and record a blocker when:
 - Next action (after review): `tcl-merge-detail` (merge Why+Evidence+Thesis into one detail view) OR the independent `tcl-hide`/`tcl-oss`; `tcl-tests` waits on both frontend todos.
 - Willow decision required: no (within approved slice; Q1 provisional followed).
 
+### 2026-07-25 01:34 — Phase 3/4: frontend review + fixes
+
+- Agent/model: Kiera + independent code-review agent (frontend-review)
+- Task ID: tcl-frontend (review)
+- User outcome: the no-silent-mock guarantee now holds on every screen, and a malformed backend response degrades honestly instead of crashing.
+- Review findings (both valid, both fixed): (1) HIGH — `WatchlistScreen` still seeded bundled mock holdings and only overwrote them on a successful non-empty fetch, so a Live-mode `unavailable` envelope left sample tickers on screen labeled as the user's real watchlist; (2) MED — `fetchToday`'s shape guard checked only `state`, but `TodayScreen` dereferences `env.warnings[0]`/`.length`, so a valid-state/malformed-warnings envelope would crash the screen.
+- Fixes: WatchlistScreen now renders from the envelope with an explicit "Live data unavailable" state (no mock seed); `fetchToday` validates `state` against the known set and coerces `warnings`/`sources`/`mode` to safe types. `npm run build` + typecheck pass (41 modules). Commit 3d8856f.
+- Reviewer: frontend-review confirmed TodayScreen honest, run()/useEffect closure correct, no `null as any` crash risk, scope respected (detail sheets untouched).
+- Next action: `tcl-hide` (hide Ask, What-if, Watchlist — removes the last stub surfaces) or `tcl-merge-detail`; both unblocked. `tcl-oss` also independent.
+- Willow decision required: no.
+
+
 
 
