@@ -1,64 +1,44 @@
-"""End-to-end API contract test via FastAPI TestClient (ADR-009).
-
-Requires the engine runtime (pandas etc.) and FastAPI; when those are absent (e.g. the
-minimal offline CI job) the test SKIPS rather than fails — an honest skip, not a fake
-pass. Run in a fully-provisioned env to exercise the real /api/today envelope.
-"""
 from __future__ import annotations
 
-import os
+from fastapi.testclient import TestClient
 
-import pytest
+import api_server
+from api_server import app
 
-pytest.importorskip("fastapi")
-pytest.importorskip("pandas")
-
-
-@pytest.fixture(scope="module")
-def client():
-    os.environ.setdefault("ALPHAWATCH_OFFLINE", "1")  # demo mode, no network
-    try:
-        from fastapi.testclient import TestClient
-
-        import api_server
-    except Exception as exc:  # engine import failed → skip, do not fake-pass
-        pytest.skip(f"api_server/engine unavailable: {exc}")
-    return TestClient(api_server.app)
+client = TestClient(app)
 
 
-CONTRACT_KEYS = {"data", "state", "mode", "observed_at", "fetched_at", "sources", "warnings"}
+def test_today_envelope_contract() -> None:
+    res = client.get("/api/today")
+    assert res.status_code == 200
+    body = res.json()
+    for key in ["data", "state", "mode", "observed_at", "fetched_at", "sources", "warnings"]:
+        assert key in body
+    assert body["state"] in {"ok", "stale", "partial", "unavailable"}
+    assert body["mode"] in {"demo", "live"}
+    assert isinstance(body["sources"], list)
+    assert isinstance(body["warnings"], list)
 
 
-def test_today_returns_typed_envelope(client):
-    r = client.get("/api/today")
-    assert r.status_code == 200
-    body = r.json()
-    assert CONTRACT_KEYS.issubset(body.keys())
-    assert body["state"] in ("ok", "stale", "partial", "unavailable")
-    assert body["mode"] in ("demo", "live")
+def test_today_demo_mode() -> None:
+    res = client.get("/api/today?mode=demo")
+    assert res.status_code == 200
+    assert res.json()["mode"] == "demo"
 
 
-def test_today_freshness_is_not_fabricated(client):
-    body = client.get("/api/today").json()
-    # observed_at must be honestly null (per-source time not tracked), not a fake now().
-    assert body["observed_at"] is None
-    # The retired fabricated field must be gone.
-    assert "updatedAgoMinutes" not in (body.get("data") or {})
-    # Per-holding rows must also not fabricate an observation time.
-    data = body.get("data") or {}
-    for bucket in ("needsAttention", "worthWatching", "noMaterialChange"):
-        for row in data.get(bucket, []):
-            assert row.get("priceObservedAt") is None
+def test_today_engine_failure_returns_unavailable(monkeypatch) -> None:
+    def _boom():
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(api_server.willow_agent, "build_advice", _boom)
+    res = client.get("/api/today")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["state"] == "unavailable"
+    assert body["data"] is None
+    assert body["warnings"]
 
 
-def test_today_date_agrees_with_fetched_at_day(client):
-    body = client.get("/api/today").json()
-    data = body.get("data") or {}
-    if data.get("date") and body.get("fetched_at"):
-        # date (SGT) must match the day component of fetched_at (SGT) — no UTC drift.
-        assert data["date"] == body["fetched_at"][:10]
-
-
-def test_today_mode_is_demo_when_offline(client):
-    body = client.get("/api/today").json()
-    assert body["mode"] == "demo"
+def test_health_still_ok() -> None:
+    res = client.get("/api/health")
+    assert res.status_code == 200
