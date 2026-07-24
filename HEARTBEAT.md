@@ -61,3 +61,13 @@ Stop and record a blocker when:
 - Verified facts: tags v0.1.0/v0.2.0/v0.3.0 all exist; React package `alphawatch-thesis-app@0.1.0` (inconsistent); FastAPI version 0.1.0; CI runs offline pytest only (no frontend build / API contract / E2E).
 - Next action: Phase 1 parallel audits (product / ux / architecture / data-and-search / testing-oss), no code edits.
 - Willow decision required: no (freeze is per Willow's explicit instruction).
+
+### 2026-07-25 00:33 — Phase 1+2 complete (audits + synthesis)
+
+- Agent/model: Kiera + 5 audit agents (gpt-5.6-sol/terra, opus-4.8, gemini-3.1, gpt-5.3-codex)
+- Task IDs: p1-audit-*, p2-synth
+- Outcome: 5 independent audits agree — no honest end-to-end task exists today; root cause is silent mock fallback + fabricated freshness + hand-mapped dual schema + fragmented UI.
+- Deliverables: docs/audits/{product,ux,architecture,data-and-search,testing-and-oss}.md; docs/NORTH_STAR.md, CURRENT_STATE.md, DECISIONS.md (ADR-001..011), DECISIONS_FOR_WILLOW.md (Q1-Q6); ARCHITECTURE.md web-layer target appended.
+- Reviewer: cross-audit consistency (5/5 confirm silent fallback + fabricated timestamps).
+- Next action: Phase 3 — implement Truthful Core Loop slice on this branch (typed envelope /api/today, honest states, no silent fallback, hide Ask/What-if, tests). Draft PR only.
+- Willow decision required: Q1-Q6 in DECISIONS_FOR_WILLOW.md (proceeding on provisional choices; reversible pre-merge).
