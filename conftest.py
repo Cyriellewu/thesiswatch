@@ -1,6 +1,6 @@
 """Ensure the repository root is importable during tests.
 
-Lets `import api_envelope`, `from tasks import ...`, and `import api_server` resolve
+Lets `import api_models`, `from tasks import ...`, and `import api_server` resolve
 regardless of pytest's invocation directory or import mode. Standard, side-effect-free.
 """
 import os
