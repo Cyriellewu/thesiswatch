@@ -16,3 +16,5 @@ exchange-calendars>=4.5
 rapidfuzz>=3.9
 pydantic>=2.0
 beautifulsoup4>=4.12
+fastapi>=0.110
+uvicorn>=0.29

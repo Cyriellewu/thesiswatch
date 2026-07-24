@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+/*
+  AlphaWatch design tokens.
+  Visual language: Apple Health hierarchy + Apple Stocks quotes + Apple Wallet
+  cards/sheets. Mobile-first, large whitespace, subtle shadows, tabular numerals.
+  Status color is ALWAYS paired with text + icon (never color alone).
+*/
+@theme {
+  --font-sans: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont,
+    "Inter", "Segoe UI", Roboto, sans-serif;
+
+  /* radii — 16–20px cards */
+  --radius-card: 20px;
+  --radius-chip: 999px;
+  --radius-sheet: 28px;
+
+  /* motion 160–240ms */
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  /* light theme */
+  --bg: #f2f2f7;
+  --surface: #ffffff;
+  --surface-2: #f7f7fa;
+  --text: #1c1c1e;
+  --text-2: #6b7280;
+  --text-3: #9ca3af;
+  --hairline: rgba(0, 0, 0, 0.07);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 20px rgba(0, 0, 0, 0.05);
+
+  /* semantic status (paired with text/icon everywhere) */
+  --pos: #1c8c4a;
+  --neg: #d1382c;
+  --neutral: #6b7280;
+  --watch: #b7791f; /* amber */
+  --watch-bg: #fdf3e2;
+  --reeval: #c0392b; /* re-evaluate */
+  --reeval-bg: #fbecea;
+  --calm-bg: #eef2f7;
+
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+  color-scheme: light;
+}
+
+:root.dark {
+  --bg: #000000;
+  --surface: #1c1c1e;
+  --surface-2: #2c2c2e;
+  --text: #f5f5f7;
+  --text-2: #a1a1aa;
+  --text-3: #71717a;
+  --hairline: rgba(255, 255, 255, 0.1);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.5);
+  --pos: #30d158;
+  --neg: #ff453a;
+  --neutral: #98989f;
+  --watch: #ffd60a;
+  --watch-bg: #33290a;
+  --reeval: #ff6961;
+  --reeval-bg: #3a1512;
+  --calm-bg: #1a1d22;
+  color-scheme: dark;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* tabular numerals for all financial figures */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* utility bridges to CSS vars so components can use Tailwind + tokens */
+@layer utilities {
+  .bg-app { background: var(--bg); }
+  .bg-surface { background: var(--surface); }
+  .bg-surface-2 { background: var(--surface-2); }
+  .text-primary { color: var(--text); }
+  .text-secondary { color: var(--text-2); }
+  .text-tertiary { color: var(--text-3); }
+  .border-hairline { border-color: var(--hairline); }
+  .shadow-card { box-shadow: var(--shadow-card); }
+  .rounded-card { border-radius: var(--radius-card); }
+  .rounded-sheet { border-radius: var(--radius-sheet); }
+  .pb-safe { padding-bottom: calc(var(--safe-bottom) + 0.5rem); }
+  .h-safe-bottom { height: var(--safe-bottom); }
+  .pt-safe { padding-top: calc(var(--safe-top) + 0.5rem); }
+}
+
+@keyframes sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes skeleton {
+  0% { opacity: 0.55; }
+  50% { opacity: 1; }
+  100% { opacity: 0.55; }
+}
+.animate-sheet-in { animation: sheet-in 240ms var(--ease-spring); }
+.animate-fade-in { animation: fade-in 180ms ease-out; }
+.skeleton {
+  background: var(--surface-2);
+  border-radius: 10px;
+  animation: skeleton 1.2s ease-in-out infinite;
+}

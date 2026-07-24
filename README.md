@@ -55,14 +55,39 @@ Core ideas:
 - **Decision history** — every material call is logged and later scored against
   what actually happened, so the tool is *accountable*.
 
-## Quick start (offline demo, no keys)
+## Web app (iOS-style, recommended)
+
+A mobile-first web UI built around the core loop: **Today → Why changed →
+Evidence → Stock thesis → Portfolio what-if**. One command starts the API
+engine and the React frontend together:
+
+```bash
+python -m venv .venv
+. .venv/Scripts/activate          # Windows  (source .venv/bin/activate on macOS/Linux)
+pip install -r requirements.txt
+python run_web.py                 # offline demo data; add --live for live fetches
+```
+
+Then open http://localhost:5173. The first run installs the frontend deps
+(needs Node.js 18+); afterwards it launches in a couple of seconds.
+
+| Today | Why changed | Evidence | Portfolio |
+| --- | --- | --- | --- |
+| ![Today](docs/screenshots/today.png) | ![Why changed](docs/screenshots/why-changed.png) | ![Evidence](docs/screenshots/evidence.png) | ![Portfolio](docs/screenshots/portfolio.png) |
+
+The UI reads the **same engine** the CLI/Streamlit app uses, through a small
+FastAPI bridge (`api_server.py`). Conclusion first, evidence last — every
+conviction driver opens the exact evidence behind it, and facts are visually
+separated from model interpretation.
+
+## Quick start (Streamlit, offline demo, no keys)
 
 ```bash
 python -m venv .venv
 . .venv/Scripts/activate        # Windows
 # source .venv/bin/activate     # macOS/Linux
 pip install -r requirements.txt
-ThesisWatch_OFFLINE=1 python -m streamlit run ui/app.py
+ALPHAWATCH_OFFLINE=1 python -m streamlit run ui/app.py
 ```
 
 The app opens at http://localhost:8501 with a **sample portfolio**

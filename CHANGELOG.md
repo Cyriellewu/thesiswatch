@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-24
+
+### Added
+- **iOS-style web app** (`app/`) — a mobile-first React + Vite frontend built
+  around the core loop **Today → Why changed → Evidence → Stock thesis →
+  Portfolio what-if**. Conclusion-first cards, bottom sheets for "why", and a
+  fixed evidence structure that visually separates fact from model
+  interpretation.
+- **FastAPI engine bridge** (`api_server.py`) exposing the existing engine to
+  the web UI: `/api/today`, `/api/why/{ticker}`, `/api/evidence/{ticker}`,
+  `/api/thesis/{ticker}`, `/api/exposures`, `/api/health`. The web UI reads the
+  **same** thesis/conviction/exposure engine as the CLI and Streamlit app.
+- **One-command launcher** (`run_web.py`) that starts the API and the frontend
+  together and opens the browser; `--live` opts into live data fetches.
+- README **Web app** section with screenshots (`docs/screenshots/`).
+
+### Changed
+- `requirements.txt` now includes `fastapi` and `uvicorn`.
+- Fixed the Streamlit quick-start env var in the README
+  (`ALPHAWATCH_OFFLINE=1`).
+
 ## [0.1.0] - 2026-07-24
 
 First public release of ThesisWatch — a local-first personal investment
