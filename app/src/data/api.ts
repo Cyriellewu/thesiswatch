@@ -73,7 +73,15 @@ async function detail<T>(path: string, mock: T, empty: T): Promise<T> {
   try {
     const r = await fetch(`${API}${path}`, { signal: AbortSignal.timeout(20000) });
     if (!r.ok) return empty;
-    return (await r.json()) as T;
+    const body = (await r.json()) as ApiEnvelope<T>;
+    const states = ["ok", "stale", "partial", "unavailable"];
+    if (!body || typeof body.state !== "string" || !states.includes(body.state)) {
+      return empty;
+    }
+    if (body.state === "unavailable" || body.data == null) {
+      return empty;
+    }
+    return body.data;
   } catch {
     return empty; // honest: no data, not fabricated mock
   }
@@ -87,4 +95,3 @@ export const fetchEvidence = (t: string) =>
   detail<Evidence[]>(`/evidence/${t}`, evidenceByTicker[t] ?? [], []);
 export const fetchThesis = (t: string) =>
   detail<StockThesis | null>(`/thesis/${t}`, thesisByTicker[t] ?? null, null);
-

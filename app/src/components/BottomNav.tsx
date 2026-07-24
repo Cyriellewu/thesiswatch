@@ -1,9 +1,8 @@
-export type Tab = "today" | "portfolio" | "watchlist";
+export type Tab = "today" | "portfolio";
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "today", label: "Today", icon: "◎" },
   { id: "portfolio", label: "Portfolio", icon: "◧" },
-  { id: "watchlist", label: "Watchlist", icon: "☆" },
 ];
 
 export function BottomNav({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) {
