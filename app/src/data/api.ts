@@ -50,8 +50,18 @@ export async function fetchToday(): Promise<ApiEnvelope<DailyBrief>> {
     const r = await fetch(`${API}/today`, { signal: AbortSignal.timeout(20000) });
     if (!r.ok) return unavailable<DailyBrief>(`HTTP ${r.status} from /today`);
     const body = (await r.json()) as ApiEnvelope<DailyBrief>;
-    if (!body || typeof body.state !== "string") return unavailable<DailyBrief>("Malformed envelope from /today");
-    return body;
+    const states = ["ok", "stale", "partial", "unavailable"];
+    if (!body || typeof body.state !== "string" || !states.includes(body.state)) {
+      return unavailable<DailyBrief>("Malformed envelope from /today");
+    }
+    // Normalize array/mode fields so consumers can dereference warnings/sources safely
+    // even if a backend response omits or malforms them.
+    return {
+      ...body,
+      mode: body.mode === "demo" ? "demo" : "live",
+      warnings: Array.isArray(body.warnings) ? body.warnings : [],
+      sources: Array.isArray(body.sources) ? body.sources : [],
+    };
   } catch (e) {
     return unavailable<DailyBrief>(`Request to /today failed: ${(e as Error).message}`);
   }
