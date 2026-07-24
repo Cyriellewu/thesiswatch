@@ -48,7 +48,7 @@ def _news_line(item: dict) -> str:
 def render() -> None:
     top = st.columns([3, 2, 1])
     with top[0]:
-        st.markdown("## 🐕 Willow's Stock Agent")
+        st.markdown("## 📓 ThesisWatch")
     advice = _advice_cached()
     with top[1]:
         st.caption(f"更新于 {advice.get('as_of_label','')}｜规则化建议,不代下单")

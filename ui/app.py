@@ -30,7 +30,7 @@ from ui import tab_tokens  # noqa: E402
 
 
 def main() -> None:
-    st.set_page_config(page_title="Willow's Stock Agent", layout="wide")
+    st.set_page_config(page_title="ThesisWatch", layout="wide")
     bootstrap_database()
 
     # 首页 = Willow's Stock Agent(单页命令中心)

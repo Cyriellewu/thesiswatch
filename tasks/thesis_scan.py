@@ -67,6 +67,14 @@ def scan_holding(
 
     if persist:
         store.save_thesis(merged)
+        # Snapshot today's conviction so Why-Changed can do a real day-over-day diff.
+        try:
+            from tasks import conviction_history as ch  # noqa: PLC0415
+
+            if focus_entry:
+                ch.record(tk, focus_entry)
+        except Exception:
+            pass
         # Log to decision history on material status/confidence changes.
         try:
             from tasks import decision_history as dh  # noqa: PLC0415
