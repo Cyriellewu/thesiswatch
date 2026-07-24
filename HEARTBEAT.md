@@ -84,3 +84,17 @@ Stop and record a blocker when:
 - Next action: independent review of this diff, then `tcl-frontend` (api.ts: remove silent mock fallback; Demo/Live mode; TodayScreen `unavailable` state) — depends on this envelope.
 - Willow decision required: no (within approved slice; branch only, no PR opened yet).
 
+### 2026-07-25 01:13 — Phase 3/4: independent review of the envelope slice + fixes
+
+- Agent/model: Kiera + independent code-review agent (envelope-review)
+- Task ID: tcl-envelope (review)
+- User outcome: the honesty guarantee now holds inside the payload, not just at the envelope level.
+- Review findings (all valid, all fixed this loop): (1) HIGH — `_holding` still stamped `priceObservedAt = now()`, relocating the fabricated-freshness bug one level down into each row; (2) MED — `data.date` was UTC-derived and disagreed with the SGT `fetched_at` by a day before 08:00 SGT; (3) MED — per-row `dataState` read `stock["degraded"]` (never set by the engine) while the envelope counted `data_degraded`, so rows could say "partial_data" while the envelope said "ok".
+- Fixes: `_holding.priceObservedAt` → null (engine exposes no per-quote observed time); `willow_agent` now sets per-holding `degraded=True` on fallback so per-row state is truthful; `today_meta` cross-checks `data_degraded` against per-row flags (single source of truth); `/api/today date` derived from the engine SGT `as_of`. Added tests for each.
+- Verified facts: live offline payload now honestly reports `state="unavailable"` (all 5 holdings on fallback quotes — previously faked "ok"), `date == fetched_at` day, all rows `priceObservedAt=null`. Full suite 98 passed / 1 failed (same pre-existing `test_cache` Windows concurrency flake; unrelated). Commits d7b6171, ef7e321 on branch.
+- Reviewer: envelope-review confirmed `api_envelope.py` derivation honest/correct and scope clean (only /api/today + new files; no version/release change).
+- Residual (low sev, noted not fixed): pre-existing `except Exception: pass` at api_server.py:78 (prevConviction fallback) — silent-swallow pattern, no warning channel per-row; defer.
+- Next action: `tcl-frontend` — api.ts remove silent mock fallback + Demo/Live mode + TodayScreen `unavailable` state (consumes this envelope).
+- Willow decision required: no.
+
+
