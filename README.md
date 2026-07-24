@@ -1,5 +1,10 @@
 # ThesisWatch — a personal investment *thesis change* monitor
 
+[![CI](https://github.com/Cyriellewu/thesiswatch/actions/workflows/ci.yml/badge.svg)](https://github.com/Cyriellewu/thesiswatch/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Cyriellewu/thesiswatch)](https://github.com/Cyriellewu/thesiswatch/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+
 > **Not another buy/sell scorer.** ThesisWatch answers the question you actually
 > ask as a long-term holder: *did my investment thesis change today, why, and do
 > I need to do anything about it?*
@@ -92,4 +97,6 @@ Business logic lives in pure, testable functions under `tasks/`. See
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+
 
