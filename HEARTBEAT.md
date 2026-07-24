@@ -97,4 +97,16 @@ Stop and record a blocker when:
 - Next action: `tcl-frontend` — api.ts remove silent mock fallback + Demo/Live mode + TodayScreen `unavailable` state (consumes this envelope).
 - Willow decision required: no.
 
+### 2026-07-25 01:26 — Phase 3 (2/6): honest frontend data layer + Demo/Live mode
+
+- Agent/model: Kiera (implementer)
+- Task ID: tcl-frontend
+- User outcome: on failure the app tells the truth ("Live data unavailable") instead of silently showing fabricated MSFT-style mock data as if it were real.
+- Action: rewrote `app/src/data/api.ts` — removed the silent mock fallback; `fetchToday` consumes the backend typed envelope and returns an explicit `unavailable` envelope on any network/HTTP/parse failure. Added `app/src/data/mode.ts` (persistent Demo/Live, default Live, fail-closed per Q1 provisional). Rewrote `TodayScreen` as an honest state machine (loading → ok/partial/unavailable) with a visible mode badge, Retry, and opt-in "Try demo data"; dropped the retired `updatedAgoMinutes` in favour of the envelope's `fetched_at`. Detail fetches (why/evidence/thesis/exposures) no longer fall back to mock on error (null/empty); demo mode serves clearly-labeled samples. Added `ApiEnvelope<T>`/`EnvelopeState`/`EnvelopeMode` to `types.ts`. Minimal ref-fix to the (to-be-hidden) WatchlistScreen so the build stays green.
+- Verified facts: `npm install` + `npm run build` (`tsc -b && vite build`) pass — 41 modules, production build clean, TypeScript typecheck green.
+- Reviewer: independent review launched (frontend-review); read next loop.
+- Next action (after review): `tcl-merge-detail` (merge Why+Evidence+Thesis into one detail view) OR the independent `tcl-hide`/`tcl-oss`; `tcl-tests` waits on both frontend todos.
+- Willow decision required: no (within approved slice; Q1 provisional followed).
+
+
 
