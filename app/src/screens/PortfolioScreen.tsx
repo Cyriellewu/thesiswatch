@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchExposures } from "../data/api";
+import { getMode, setMode, type UiMode } from "../data/mode";
 import type { ExposureLevel, PortfolioExposure } from "../types";
 
 const LEVEL_META: Record<ExposureLevel, { label: string; fg: string; bg: string; w: string }> = {
@@ -11,6 +12,8 @@ const LEVEL_META: Record<ExposureLevel, { label: string; fg: string; bg: string;
 export function PortfolioScreen() {
   const [exposures, setExposures] = useState<PortfolioExposure[] | null>(null);
   const [open, setOpen] = useState<string | null>(null);
+  const mode = getMode();
+  const isDemo = mode === "demo";
 
   useEffect(() => {
     let live = true;
@@ -24,6 +27,27 @@ export function PortfolioScreen() {
 
   return (
     <div className="px-5 lg:px-8 pt-6 pb-12">
+      <div className="flex items-center gap-2 mb-3">
+        <span
+          className="rounded-chip px-2 py-0.5 text-[11px] font-semibold"
+          style={{
+            background: isDemo ? "var(--watch-bg)" : "var(--calm-bg)",
+            color: isDemo ? "var(--watch)" : "var(--neutral)",
+          }}
+        >
+          {isDemo ? "DEMO DATA" : "LIVE"}
+        </span>
+        <button
+          onClick={() => {
+            const next: UiMode = isDemo ? "live" : "demo";
+            setMode(next);
+            window.location.reload();
+          }}
+          className="text-[12px] text-secondary underline underline-offset-2 min-h-[44px]"
+        >
+          {isDemo ? "Switch to Live" : "Switch to Demo"}
+        </button>
+      </div>
       <h1 className="text-[26px] lg:text-[32px] font-bold">Portfolio</h1>
       <p className="text-secondary text-[14px] mt-1 leading-relaxed">
         Looks diversified — but what shared risks are you actually betting on?

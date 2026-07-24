@@ -7,13 +7,6 @@ type Load =
   | { status: "loading" }
   | { status: "done"; thesisEnv: ApiEnvelope<StockThesis>; whyEnv: ApiEnvelope<WhyChanged> };
 
-type Period = "d1" | "w1" | "m1";
-
-const PERIODS: Array<{ id: Period; label: string }> = [
-  { id: "d1", label: "Today" },
-  { id: "w1", label: "Week" },
-  { id: "m1", label: "Month" },
-];
 
 export function ThesisDetail({
   ticker,
@@ -24,7 +17,6 @@ export function ThesisDetail({
   prevConviction?: number;
   onBack: () => void;
 }) {
-  const [period, setPeriod] = useState<Period>("d1");
   const [expandedClaimIds, setExpandedClaimIds] = useState<string[]>([]);
   const [load, setLoad] = useState<Load>({ status: "loading" });
   const [reloadKey, setReloadKey] = useState(0);
@@ -115,29 +107,14 @@ export function ThesisDetail({
           </div>
         )}
 
-        <Section title="WHAT CHANGED">
-          <div className="flex gap-2 flex-wrap">
-            {PERIODS.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setPeriod(p.id)}
-                className="rounded-chip px-3 py-2 text-[13px] font-medium min-h-[44px]"
-                style={{
-                  background: period === p.id ? "var(--text)" : "var(--surface-2)",
-                  color: period === p.id ? "var(--surface)" : "var(--text)",
-                }}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {thesis.whatChanged[period].length > 0 ? (
-              thesis.whatChanged[period].map((driver) => (
-                <DriverChip key={`${period}-${driver.label}`} label={driver.label} points={driver.points} sign={driver.sign} />
+        <Section title="WHAT CHANGED (LATEST)">
+          <div className="mt-1 flex flex-wrap gap-1.5">
+            {thesis.whatChanged.length > 0 ? (
+              thesis.whatChanged.map((driver) => (
+                <DriverChip key={driver.label} label={driver.label} points={driver.points} sign={driver.sign} />
               ))
             ) : (
-              <p className="text-[14px] text-secondary">No material drivers for this period.</p>
+              <p className="text-[14px] text-secondary">No material drivers available.</p>
             )}
           </div>
         </Section>
@@ -310,7 +287,7 @@ function EvidenceItem({ e, compact = false }: { e: Evidence; compact?: boolean }
           <span>{e.sourceName}</span>
         )}
         <span className="text-tertiary"> · </span>
-        {fmtDate(e.observedAt)}
+        {fmtDate(e.observedAt, "Observed: unknown")}
       </div>
       <p className="mt-2 text-[13px] leading-relaxed">
         <span className="text-secondary">Interpretation: </span>
@@ -407,6 +384,9 @@ function UnavailableState({
   );
 }
 
-function fmtDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+function fmtDate(iso: string | null | undefined, fallback = "unknown"): string {
+  if (!iso) return fallback;
+  const dt = new Date(iso);
+  if (Number.isNaN(dt.getTime())) return fallback;
+  return dt.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }

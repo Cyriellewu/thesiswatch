@@ -148,15 +148,7 @@ export const thesisByTicker: Record<string, StockThesis> = {
     ticker: "MSFT", status: "watch", oneLiner: "Thesis strengthened this week", conviction: 78,
     confidence: "Medium-high", coveragePct: 82, horizonMonths: 18, dataState: "ok",
     asOf: "2026-07-24T19:52:00Z",
-    whatChanged: {
-      d1: [{ label: "Valuation entered preferred range", points: 3, sign: "positive" }],
-      w1: whyChangedByTicker.MSFT.drivers,
-      m1: [
-        { label: "Azure guidance improved", points: 4, sign: "positive" },
-        { label: "Estimate revisions turned positive", points: 3, sign: "positive" },
-        { label: "AI capex uncertainty", points: -2, sign: "negative" },
-      ],
-    },
+    whatChanged: whyChangedByTicker.MSFT.drivers,
     currentThesis: [
       { id: "msft-cloud", text: "AI demand supports durable double-digit cloud growth." },
       { id: "msft-val", text: "Reasonable valuation for the quality and durability of earnings." },

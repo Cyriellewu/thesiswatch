@@ -42,6 +42,8 @@ test.describe("Live mode unavailable state", () => {
     await expect(page.locator("text=unavailable").first()).toBeVisible({ timeout: 15000 });
     const unavailableCount = await page.locator("text=unavailable").count();
     expect(unavailableCount).toBeGreaterThan(0);
+    await expect(page.locator("text=MSFT").first()).toHaveCount(0);
+    await expect(page.locator("text=Microsoft").first()).toHaveCount(0);
   });
 });
 

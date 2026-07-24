@@ -53,9 +53,7 @@ export function StockThesisScreen({
 
       <div className="px-5">
         <Block title="What changed">
-          <TimeRow label="Today" drivers={t.whatChanged.d1} />
-          <TimeRow label="This week" drivers={t.whatChanged.w1} />
-          <TimeRow label="This month" drivers={t.whatChanged.m1} />
+          <TimeRow label="Latest" drivers={t.whatChanged} />
         </Block>
 
         <Block title="Current thesis">

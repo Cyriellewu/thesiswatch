@@ -112,7 +112,7 @@ export interface Holding {
   /** Portfolio weight, bounded to [0, 100]. */
   weightPct: number;
   /** ISO 8601 timestamp for the latest price observation. */
-  priceObservedAt: string;
+  priceObservedAt: string | null;
   /** State of the data used to render this holding. */
   dataState: DataState;
   /** Current user presentation state for this dated card. */
@@ -144,7 +144,7 @@ export interface WhyChanged {
   meaningForYou: string;
   status: ThesisStatus;
   /** ISO 8601 timestamp at which the explanation was generated. */
-  asOf: string;
+  asOf: string | null;
   dataState: DataState;
 }
 
@@ -158,9 +158,9 @@ export interface Evidence {
   /** Canonical source location when one is available. */
   sourceUrl?: string;
   /** ISO 8601 time the underlying event/value was observed. */
-  observedAt: string;
+  observedAt: string | null;
   /** ISO 8601 time AlphaWatch retrieved the item. */
-  fetchedAt: string;
+  fetchedAt: string | null;
   freshness: EvidenceFreshness;
   /** Explicit thesis meaning, visually separated from the source claim. */
   interpretation: string;
@@ -221,11 +221,7 @@ export interface StockThesis {
   /** Usable evidence coverage, bounded integer [0, 100]. */
   coveragePct: number;
   /** Conviction changes over one day, one week, and one month. */
-  whatChanged: {
-    d1: ConvictionDriver[];
-    w1: ConvictionDriver[];
-    m1: ConvictionDriver[];
-  };
+  whatChanged: ConvictionDriver[];
   currentThesis: ThesisClaim[];
   supporting: Evidence[];
   risks: Evidence[];
@@ -239,7 +235,7 @@ export interface StockThesis {
   horizonMonths: number;
   dataState: DataState;
   /** ISO 8601 timestamp for this thesis snapshot. */
-  asOf: string;
+  asOf: string | null;
 }
 
 /** Current exposure to a portfolio-level factor. */
