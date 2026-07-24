@@ -47,9 +47,9 @@ export function TodayScreen({
         : `${b.needsAttention.length + b.worthWatching.length} holdings need a look`;
 
   return (
-    <div className="px-5 pt-3 pb-6">
+    <div className="px-5 lg:px-8 pt-6 pb-12">
       <p className="text-secondary text-[15px]">Good morning</p>
-      <h1 className="text-[26px] font-bold leading-tight mt-1">{overallLine}</h1>
+      <h1 className="text-[26px] lg:text-[32px] font-bold leading-tight mt-1">{overallLine}</h1>
       <p className="text-secondary text-[14px] mt-2 leading-relaxed">
         {b.overallStatus === "no_action"
           ? "Only price movement today — your core theses are intact."
@@ -97,7 +97,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <div className="mt-6">
       <h2 className="text-[13px] font-semibold text-secondary uppercase tracking-wide mb-2.5">{title}</h2>
-      <div className="space-y-3">{children}</div>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">{children}</div>
     </div>
   );
 }

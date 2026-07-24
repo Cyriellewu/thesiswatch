@@ -31,12 +31,14 @@ export function PortfolioScreen() {
   }, []);
 
   return (
-    <div className="px-5 pt-3 pb-8">
-      <h1 className="text-[26px] font-bold">Portfolio</h1>
+    <div className="px-5 lg:px-8 pt-6 pb-12">
+      <h1 className="text-[26px] lg:text-[32px] font-bold">Portfolio</h1>
       <p className="text-secondary text-[14px] mt-1 leading-relaxed">
         Looks diversified — but what shared risks are you actually betting on?
       </p>
 
+      <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-start">
+      <section>
       <h2 className="text-[13px] font-semibold text-secondary uppercase tracking-wide mt-6 mb-2.5">
         Hidden exposures
       </h2>
@@ -81,8 +83,10 @@ export function PortfolioScreen() {
           );
         })}
       </div>
+      </section>
 
-      <h2 className="text-[13px] font-semibold text-secondary uppercase tracking-wide mt-7 mb-2.5">
+      <section>
+      <h2 className="text-[13px] font-semibold text-secondary uppercase tracking-wide mt-7 lg:mt-6 mb-2.5">
         What-if simulator
       </h2>
       <div className="flex gap-2 flex-wrap">
@@ -107,6 +111,8 @@ export function PortfolioScreen() {
         <SimRow label="Cash allocation" a={sim.cash[0]} b={sim.cash[1]} />
       </div>
       <p className="text-tertiary text-[12px] mt-3">Decision simulation only — no orders are placed.</p>
+      </section>
+      </div>
     </div>
   );
 }

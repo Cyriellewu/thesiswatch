@@ -16,10 +16,10 @@ export function WatchlistScreen({ onOpenThesis }: { onOpenThesis: (t: string) =>
     return () => { live = false; };
   }, []);
   return (
-    <div className="px-5 pt-3 pb-8">
-      <h1 className="text-[26px] font-bold">Watchlist</h1>
+    <div className="px-5 lg:px-8 pt-6 pb-12">
+      <h1 className="text-[26px] lg:text-[32px] font-bold">Watchlist</h1>
       <p className="text-secondary text-[14px] mt-1">Your holdings, sorted by conviction change.</p>
-      <div className="space-y-2 mt-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 mt-5">
         {[...allHoldings]
           .sort((a, b) => Math.abs(b.conviction - b.prevConviction) - Math.abs(a.conviction - a.prevConviction))
           .map((h) => {
