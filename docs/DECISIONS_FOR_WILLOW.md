@@ -63,3 +63,13 @@ STOPPED touching the backend envelope files (`api_server.py`, `api_models.py`, `
 `tests/test_api_contract.py`) to avoid a concurrent-edit collision, and is holding further backend work
 until you resolve ownership.
 
+**Update (01:40 SGT):** the second writer then committed `6aab217 "refactor: consolidate to one
+envelope module (remove superseded fork)"` — it **deleted `api_envelope.py` + `tests/test_api_envelope.py`
+and kept `api_models.py`** (option A). So the **duplication is already resolved** in favour of A, and the
+branch is green (contract tests pass, frontend still compatible). The only item left from this Q7 is the
+**timestamp-honesty reconciliation in A** (observed_at should be null-or-real, not the compute-time
+`as_of`; fix the SGT-parsed-as-UTC bug so `observed_at` can't land after `fetched_at`). Because a second
+writer is actively committing to this branch, the loop is standing down from implementation to avoid a
+two-writer collision rather than making that fix itself.
+
+
