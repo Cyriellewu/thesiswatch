@@ -133,3 +133,13 @@ Stop and record a blocker when:
 
 
 
+
+### 2026-07-25 02:00 — Phase 3 complete, Phase 4 review launched
+
+- Agents: impl-backend (gpt-5.3-codex), impl-frontend (claude-sonnet-4.6); reconciliation + hygiene by Kiera.
+- Backend: typed envelope (api_models.Envelope) on all read endpoints; honest _derive_state/_mk_envelope; real warnings; contract tests. Reconciled a duplicate-envelope fork created by concurrent heartbeat work (removed api_envelope.py). Suite: 90 passed, 1 known-flaky (test_cache concurrent temp files).
+- Frontend: unwrapped enveloped detail endpoints; hid Ask/What-if/Watchlist; merged Why+Evidence+Thesis into one responsive ThesisDetail (desktop split-view, mobile single-flow); Demo/Live indicator; Playwright 4/4; npm run build clean.
+- Hygiene: CHANGELOG backfilled v0.2.0 + documented unreleased core-loop (NOT released); renamed app package thesiswatch-app; closed genuinely-completed issue #4 honestly; recorded Q7/Q8 + desktop-rail polish item for Willow.
+- Known polish issue: desktop attention-rail (~380px) clips card badges. Structure correct; needs compact list-card variant.
+- Next: address review blockers -> push branch -> open DRAFT PR (no merge) -> morning handoff. Heartbeat kept PAUSED during active implementation to prevent concurrent edits; will re-enable after PR.
+- Willow decisions pending: Q1-Q8 in docs/DECISIONS_FOR_WILLOW.md.
