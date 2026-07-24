@@ -25,6 +25,13 @@ from tasks import willow_agent  # noqa: E402
 from tasks import thesis_scan  # noqa: E402
 from tasks import exposure as exposure_mod  # noqa: E402
 
+from api_envelope import (  # noqa: E402
+    ApiEnvelope,
+    current_mode,
+    today_meta,
+    unavailable_meta,
+)
+
 app = FastAPI(title="ThesisWatch API", version="0.1.0")
 app.add_middleware(
     CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
@@ -91,30 +98,44 @@ def _holding(stock: dict[str, Any], focus: dict[str, Any] | None, status_obj) ->
     }
 
 
-@app.get("/api/today")
-def today() -> dict[str, Any]:
-    advice = _advice()
-    ps, statuses = thesis_scan.scan_portfolio(advice, persist=False)
-    by_tk = {s.ticker.upper(): s for s in statuses}
-    focus_by = {f["ticker"].upper(): f for f in advice.get("focus", [])}
+@app.get("/api/today", response_model=ApiEnvelope[dict[str, Any]])
+def today() -> ApiEnvelope:
+    """Daily answer, wrapped in the typed envelope (ADR-001).
 
-    holdings = []
-    for s in advice.get("stocks", []):
-        tk = s["ticker"].upper()
-        holdings.append(_holding(s, focus_by.get(tk), by_tk.get(tk)))
+    On any engine failure this returns an explicit `unavailable` envelope instead of a
+    500 or a silently-empty-but-"ok" body, so the client can render an honest state.
+    Freshness fields come from `today_meta` (real compute time / null), never now().
+    """
+    mode = current_mode()
+    try:
+        advice = _advice()
+        ps, statuses = thesis_scan.scan_portfolio(advice, persist=False)
+        by_tk = {s.ticker.upper(): s for s in statuses}
+        focus_by = {f["ticker"].upper(): f for f in advice.get("focus", [])}
 
-    def bucket(name: str) -> list[dict[str, Any]]:
-        return [h for h in holdings if h["status"] == name]
+        holdings = []
+        for s in advice.get("stocks", []):
+            tk = s["ticker"].upper()
+            holdings.append(_holding(s, focus_by.get(tk), by_tk.get(tk)))
 
-    return {
-        "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
-        "overallStatus": ps.overall,
-        "needsAttention": bucket("re_evaluate"),
-        "worthWatching": bucket("watch"),
-        "noMaterialChange": bucket("no_material_change"),
-        "updatedAgoMinutes": 0,
-        "dataState": "ok",
-    }
+        def bucket(name: str) -> list[dict[str, Any]]:
+            return [h for h in holdings if h["status"] == name]
+
+        meta = today_meta(advice)
+        data = {
+            "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "overallStatus": ps.overall,
+            "needsAttention": bucket("re_evaluate"),
+            "worthWatching": bucket("watch"),
+            "noMaterialChange": bucket("no_material_change"),
+            "dataState": meta["state"],
+        }
+        return ApiEnvelope(data=data, mode=mode, **meta)
+    except Exception as exc:  # honest failure, not a silent swallow
+        return ApiEnvelope(
+            data=None, mode=mode,
+            **unavailable_meta(f"today unavailable: {type(exc).__name__}: {exc}"),
+        )
 
 
 @app.get("/api/exposures")
