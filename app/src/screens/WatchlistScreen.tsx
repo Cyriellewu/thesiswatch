@@ -1,17 +1,24 @@
 import { useEffect, useState } from "react";
-import { allHoldings as mockHoldings } from "../data/mock";
-import { fetchDailyBrief } from "../data/api";
+import { fetchToday } from "../data/api";
 import { StatusPill } from "../components/primitives";
 import type { Holding } from "../types";
 
 export function WatchlistScreen({ onOpenThesis }: { onOpenThesis: (t: string) => void }) {
-  const [allHoldings, setAllHoldings] = useState<Holding[]>(mockHoldings);
+  // null = loading; [] with unavailable=true = honest failure (never mock-as-live).
+  const [holdings, setHoldings] = useState<Holding[] | null>(null);
+  const [unavailable, setUnavailable] = useState(false);
   useEffect(() => {
     let live = true;
-    fetchDailyBrief().then((b) => {
+    fetchToday().then((env) => {
       if (!live) return;
-      const all = [...b.needsAttention, ...b.worthWatching, ...b.noMaterialChange];
-      if (all.length) setAllHoldings(all);
+      if (!env.data) {
+        setUnavailable(true);
+        setHoldings([]);
+        return;
+      }
+      const b = env.data;
+      setUnavailable(false);
+      setHoldings([...b.needsAttention, ...b.worthWatching, ...b.noMaterialChange]);
     });
     return () => { live = false; };
   }, []);
@@ -19,8 +26,12 @@ export function WatchlistScreen({ onOpenThesis }: { onOpenThesis: (t: string) =>
     <div className="px-5 lg:px-8 pt-6 pb-12">
       <h1 className="text-[26px] lg:text-[32px] font-bold">Watchlist</h1>
       <p className="text-secondary text-[14px] mt-1">Your holdings, sorted by conviction change.</p>
+      {holdings === null && <p className="text-secondary text-[14px] mt-6">Loading…</p>}
+      {unavailable && (
+        <p className="text-secondary text-[14px] mt-6">Live data unavailable — no holdings to show.</p>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 mt-5">
-        {[...allHoldings]
+        {[...(holdings ?? [])]
           .sort((a, b) => Math.abs(b.conviction - b.prevConviction) - Math.abs(a.conviction - a.prevConviction))
           .map((h) => {
             const delta = h.conviction - h.prevConviction;
