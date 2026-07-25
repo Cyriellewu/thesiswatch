@@ -151,3 +151,10 @@ Stop and record a blocker when:
 - Also fixed: nullable timestamp rendering (no 1970), removed fake d1/w1/m1 period tabs -> single "What changed (latest)", desktop rail xl:grid-cols-1 (clipping gone), unified Demo/Live toggle (both reload), Portfolio mobile mode badge, expanded contract tests (why/evidence/thesis/exposures + forced-failure) + Playwright negative assertion (mock absent on live failure). Deleted now-dead EvidenceSheet.tsx/WhyChangedSheet.tsx.
 - Verified by Kiera: pytest 93 passed / 1 known flaky; npm build clean; live /api/today => state=partial, observed_at=null, warning present; 1440px screenshot confirms no clipping.
 - Next: push branch, open DRAFT PR (no merge), write morning handoff, re-enable heartbeat.
+
+### 2026-07-25 10:30 — CI upgraded (product-level), all green on PR #6
+
+- Added frontend-build (npm ci + tsc + vite build) and e2e (Playwright, self-contained) jobs to .github/workflows/ci.yml.
+- PR #6 checks: 5/5 successful — pytest 3.10/3.11/3.12 (incl. API contract), frontend build+typecheck, e2e smoke. Windows-only flaky test_cache passed on Linux.
+- "CI green" now proves the web product works, not just the engine. Overnight heartbeat correctly added no churn.
+- Still awaiting Willow Q1-Q8 for the product-direction work.
